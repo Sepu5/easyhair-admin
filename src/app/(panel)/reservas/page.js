@@ -8,6 +8,7 @@ import TablaReservas from "@/components/reservas/TablaReservas";
 import ModalConfirmar from "@/components/reservas/ModalConfirmar";
 import ModalCancelar from "@/components/reservas/ModalCancelar";
 import ModalReprogramar from "@/components/reservas/ModalReprogramar";
+import BloqueosHorario from "@/components/reservas/BloqueosHorario";
 import { pedir } from "@/lib/api";
 import {
   cargarAgenda,
@@ -107,6 +108,10 @@ export default function Reservas() {
   );
 
   const visibles = filtrarPorEstado(reservas, filtros.estado);
+  // los bloqueos son de un peluquero: el elegido en el filtro (o el único que haya)
+  const peluqueroBloqueos =
+    peluqueros.find((p) => String(p.id) === String(filtros.peluqueroId)) ||
+    (peluqueros.length === 1 ? peluqueros[0] : null);
   const reserva = accion ? accion.reserva : null;
 
   return (
@@ -135,6 +140,8 @@ export default function Reservas() {
           <TablaReservas reservas={visibles} hoy={hoy} onAccion={abrirAccion} />
         </>
       )}
+
+      <BloqueosHorario fecha={filtros.fecha} peluquero={peluqueroBloqueos} hoy={hoy} />
 
       {accion?.tipo === "atender" && (
         <ModalConfirmar

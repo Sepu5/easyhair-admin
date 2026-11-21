@@ -117,3 +117,29 @@ export async function cargarHorasLibres(pedirFn, fecha, peluqueroId) {
   const respuesta = await pedirFn(`/api/reservas/disponibilidad?fecha=${fecha}&peluqueroId=${peluqueroId}`);
   return respuesta.horasDisponibles || [];
 }
+
+// ---- Bloqueos de horario ----
+
+export function validarBloqueo({ hora, motivo }) {
+  const errores = {};
+  if (!hora) errores.hora = "Elige la hora que quieres bloquear.";
+  if (motivo.trim().length > 100) errores.motivo = "El motivo no puede superar los 100 caracteres.";
+  return errores;
+}
+
+// Bloqueos del día ordenados por hora
+export async function cargarBloqueos(pedirFn, fecha, peluqueroId) {
+  const bloqueos = await pedirFn(`/api/bloqueos?fecha=${fecha}&peluqueroId=${peluqueroId}`);
+  return [...bloqueos].sort((a, b) => a.hora.localeCompare(b.hora));
+}
+
+export function crearBloqueo(pedirFn, { peluqueroId, fecha, hora, motivo }) {
+  return pedirFn("/api/bloqueos", {
+    method: "POST",
+    body: { peluqueroId: Number(peluqueroId), fecha, hora, motivo: motivo.trim() },
+  });
+}
+
+export function eliminarBloqueo(pedirFn, id) {
+  return pedirFn(`/api/bloqueos/${id}`, { method: "DELETE" });
+}
