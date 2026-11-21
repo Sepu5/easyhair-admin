@@ -65,3 +65,55 @@ export async function cargarAgenda(pedirFn, fecha, peluqueros, peluqueroId) {
   );
   return ordenarPorHora(respuestas.flat());
 }
+
+// ---- Acciones sobre una reserva ----
+
+// Qué botones mostrar según las reglas del backend:
+// todo solo con reservas pendientes, y atender solo el mismo día de la reserva
+export function accionesDisponibles(reserva, hoy = fechaHoy()) {
+  const pendiente = puedeModificarse(reserva);
+  return {
+    atender: pendiente && reserva.fecha === hoy,
+    noAsistio: pendiente,
+    cancelar: pendiente,
+    reprogramar: pendiente,
+  };
+}
+
+// El staff siempre tiene que explicar por qué cancela
+export function validarMotivo(motivo) {
+  const texto = motivo.trim();
+  if (!texto) return "Indica el motivo de la cancelación.";
+  if (texto.length > 200) return "El motivo no puede superar los 200 caracteres.";
+  return "";
+}
+
+export function validarReprogramacion({ fecha, hora }, hoy = fechaHoy()) {
+  const errores = {};
+  if (!fecha) errores.fecha = "Elige una fecha.";
+  else if (fecha < hoy) errores.fecha = "No se puede usar una fecha pasada.";
+  if (!hora) errores.hora = "Elige una hora disponible.";
+  return errores;
+}
+
+export function atenderReserva(pedirFn, id) {
+  return pedirFn(`/api/reservas/${id}/atender`, { method: "PUT" });
+}
+
+export function marcarNoAsistio(pedirFn, id) {
+  return pedirFn(`/api/reservas/${id}/no-asistio`, { method: "PUT" });
+}
+
+export function cancelarReserva(pedirFn, id, motivo) {
+  return pedirFn(`/api/reservas/${id}/cancelar`, { method: "PUT", body: { motivo: motivo.trim() } });
+}
+
+export function reprogramarReserva(pedirFn, id, fecha, hora) {
+  return pedirFn(`/api/reservas/${id}/reprogramar`, { method: "PUT", body: { fecha, hora } });
+}
+
+// Horas libres de un peluquero en una fecha (ej. ["10:00", "11:00"])
+export async function cargarHorasLibres(pedirFn, fecha, peluqueroId) {
+  const respuesta = await pedirFn(`/api/reservas/disponibilidad?fecha=${fecha}&peluqueroId=${peluqueroId}`);
+  return respuesta.horasDisponibles || [];
+}

@@ -1,7 +1,7 @@
 import FilaReserva from "@/components/reservas/FilaReserva";
 
 // Tabla con las reservas del día
-export default function TablaReservas({ reservas }) {
+export default function TablaReservas({ reservas, hoy, onAccion = () => {} }) {
   if (reservas.length === 0) {
     return <div className="alert alert-light border">No hay reservas para este día con estos filtros.</div>;
   }
@@ -17,11 +17,12 @@ export default function TablaReservas({ reservas }) {
             <th>Servicios</th>
             <th>Total</th>
             <th>Estado</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           {reservas.map((reserva) => (
-            <FilaReserva key={reserva.id} reserva={reserva} />
+            <FilaReserva key={reserva.id} reserva={reserva} hoy={hoy} onAccion={onAccion} />
           ))}
         </tbody>
       </table>
