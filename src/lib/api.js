@@ -6,6 +6,9 @@ export const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://54.152.113.142
 // Nombre con el que se guarda el token en el navegador
 export const CLAVE_TOKEN = "easyhair_token";
 
+// Evento que avisa al resto del panel que el token ya no sirve (vencido o inválido)
+export const EVENTO_SESION_EXPIRADA = "easyhair:sesion-expirada";
+
 export function leerToken() {
   // en el servidor no existe localStorage
   if (typeof window === "undefined") {
@@ -42,12 +45,13 @@ export function mensajeDeError(status, datos) {
 // Devuelve los datos de la respuesta o lanza un Error con el mensaje del backend.
 export async function pedir(ruta, opciones = {}) {
   const { body, headers, ...resto } = opciones;
+  const token = leerToken();
 
   let respuesta;
   try {
     respuesta = await fetch(`${API_URL}${ruta}`, {
       ...resto,
-      headers: armarHeaders(leerToken(), headers),
+      headers: armarHeaders(token, headers),
       body: body !== undefined ? JSON.stringify(body) : undefined,
     });
   } catch {
@@ -63,6 +67,11 @@ export async function pedir(ruta, opciones = {}) {
     } catch {
       datos = texto;
     }
+  }
+
+  // si mandamos un token y el gateway lo rechaza, la sesión expiró
+  if (respuesta.status === 401 && token) {
+    window.dispatchEvent(new window.Event(EVENTO_SESION_EXPIRADA));
   }
 
   if (!respuesta.ok) {

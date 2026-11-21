@@ -1,4 +1,5 @@
 import NavLink from "@/components/layout/NavLink";
+import BotonCerrarSesion from "@/components/layout/BotonCerrarSesion";
 import { opcionesMenu } from "@/lib/menu";
 
 // Menú vertical del panel. En celular se transforma en offcanvas.
@@ -34,13 +35,9 @@ export default function Sidebar() {
 
           <hr className="my-3" />
 
-          {/* el cierre de sesión se conecta en la tarjeta 3 */}
           <ul className="nav flex-column mb-3">
             <li className="nav-item mx-2">
-              <button type="button" className="btn btn-danger mx-4 d-flex gap-2 justify-content-center">
-                <i className="bi bi-door-closed"></i>
-                Cerrar sesión
-              </button>
+              <BotonCerrarSesion />
             </li>
           </ul>
         </div>

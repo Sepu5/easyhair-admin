@@ -1,4 +1,5 @@
 import Link from "next/link";
+import UsuarioActual from "@/components/layout/UsuarioActual";
 
 // Barra negra de arriba con el nombre y el botón del menú en celular
 export default function Topbar() {
@@ -8,6 +9,10 @@ export default function Topbar() {
         <i className="bi bi-scissors me-2"></i>
         EasyHair Admin
       </Link>
+
+      <div className="ms-auto d-flex align-items-center">
+        <UsuarioActual />
+      </div>
 
       {/* en celular el menú se abre con este botón */}
       <ul className="navbar-nav flex-row d-md-none">
