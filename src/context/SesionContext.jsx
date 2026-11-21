@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import { leerSesion, guardarSesion, borrarSesion } from "@/lib/sesion";
+import { EVENTO_SESION_EXPIRADA } from "@/lib/api";
 
 // Context: comparte el usuario que inició sesión con todo el panel
 const SesionContext = createContext(null);
@@ -18,6 +19,16 @@ export function SesionProvider({ children }) {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     if (sesion) setUsuario(sesion.usuario);
     setCargando(false);
+  }, []);
+
+  // Si el backend rechaza el token (401), se cierra la sesión en todo el panel
+  useEffect(() => {
+    function alExpirar() {
+      borrarSesion();
+      setUsuario(null);
+    }
+    window.addEventListener(EVENTO_SESION_EXPIRADA, alExpirar);
+    return () => window.removeEventListener(EVENTO_SESION_EXPIRADA, alExpirar);
   }, []);
 
   function iniciarSesion(token, datosUsuario) {

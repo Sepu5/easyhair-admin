@@ -1,7 +1,7 @@
-import { render, screen, cleanup, fireEvent } from "@testing-library/react";
+import { render, screen, cleanup, fireEvent, act } from "@testing-library/react";
 import { SesionProvider, useSesion } from "@/context/SesionContext";
 import { guardarSesion, CLAVE_USUARIO } from "@/lib/sesion";
-import { CLAVE_TOKEN } from "@/lib/api";
+import { CLAVE_TOKEN, EVENTO_SESION_EXPIRADA } from "@/lib/api";
 
 const { module, test } = QUnit;
 
@@ -67,6 +67,18 @@ module("SesionContext", (hooks) => {
     dibujar();
 
     fireEvent.click(screen.getByText("Salir"));
+
+    assert.ok(screen.getByText("Sin sesión"));
+    assert.equal(localStorage.getItem(CLAVE_TOKEN), null);
+  });
+
+  test("si el backend avisa que el token expiró, se cierra la sesión", (assert) => {
+    guardarSesion(tokenFalso(), ana);
+    dibujar();
+
+    act(() => {
+      window.dispatchEvent(new window.Event(EVENTO_SESION_EXPIRADA));
+    });
 
     assert.ok(screen.getByText("Sin sesión"));
     assert.equal(localStorage.getItem(CLAVE_TOKEN), null);

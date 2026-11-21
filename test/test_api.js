@@ -1,4 +1,4 @@
-import { armarHeaders, mensajeDeError, pedir, CLAVE_TOKEN } from "@/lib/api";
+import { armarHeaders, mensajeDeError, pedir, CLAVE_TOKEN, EVENTO_SESION_EXPIRADA } from "@/lib/api";
 
 const { module, test } = QUnit;
 
@@ -72,6 +72,35 @@ module("api: pedir", (hooks) => {
   test("respuesta vacía devuelve null", async (assert) => {
     globalThis.fetch = fetchFalso(204, null);
     assert.equal(await pedir("/api/servicios/1", { method: "DELETE" }), null);
+  });
+
+  test("401 con token avisa que la sesión expiró", async (assert) => {
+    localStorage.setItem(CLAVE_TOKEN, "tokenVencido");
+    globalThis.fetch = fetchFalso(401, { mensaje: "Sesión inválida o expirada, inicia sesión de nuevo" });
+    let avisado = false;
+    const escuchar = () => {
+      avisado = true;
+    };
+    window.addEventListener(EVENTO_SESION_EXPIRADA, escuchar);
+
+    await assert.rejects(pedir("/api/materiales"), /Sesión inválida o expirada/);
+    assert.ok(avisado);
+
+    window.removeEventListener(EVENTO_SESION_EXPIRADA, escuchar);
+  });
+
+  test("401 sin token (ej. login con clave mala) no avisa nada", async (assert) => {
+    globalThis.fetch = fetchFalso(401, { mensaje: "Correo o contraseña incorrectos" });
+    let avisado = false;
+    const escuchar = () => {
+      avisado = true;
+    };
+    window.addEventListener(EVENTO_SESION_EXPIRADA, escuchar);
+
+    await assert.rejects(pedir("/api/auth/login", { method: "POST", body: {} }));
+    assert.notOk(avisado);
+
+    window.removeEventListener(EVENTO_SESION_EXPIRADA, escuchar);
   });
 
   test("lanza error con el mensaje del backend", async (assert) => {
