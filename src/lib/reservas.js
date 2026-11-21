@@ -46,3 +46,22 @@ export function contarPorEstado(reservas) {
 export function puedeModificarse(reserva) {
   return reserva.estado === "PENDIENTE";
 }
+
+// ---- Llamadas al backend ----
+
+// Peluqueros activos (para el filtro de la agenda)
+export async function cargarPeluqueros(pedirFn) {
+  const peluqueros = await pedirFn("/api/peluqueros");
+  return peluqueros.filter((peluquero) => peluquero.activo !== false);
+}
+
+// Agenda de un día.
+// El backend entrega la agenda de UN peluquero, así que para "todos"
+// se piden todas a la vez (en paralelo con Promise.all) y se juntan.
+export async function cargarAgenda(pedirFn, fecha, peluqueros, peluqueroId) {
+  const ids = peluqueroId ? [peluqueroId] : peluqueros.map((peluquero) => peluquero.id);
+  const respuestas = await Promise.all(
+    ids.map((id) => pedirFn(`/api/reservas/agenda?fecha=${fecha}&peluqueroId=${id}`))
+  );
+  return ordenarPorHora(respuestas.flat());
+}
