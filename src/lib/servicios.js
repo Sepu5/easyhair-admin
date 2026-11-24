@@ -1,3 +1,22 @@
+// Lógica de los servicios (sin React, para poder probarla fácil)
+
+// Todos los servicios ordenados por nombre
+export async function cargarServicios(pedirFn) {
+  const servicios = await pedirFn("/api/servicios");
+  return [...servicios].sort((a, b) => a.nombre.localeCompare(b.nombre));
+}
+
+export function crearServicio(pedirFn, servicio) {
+  return pedirFn("/api/servicios", { method: "POST", body: servicio });
+}
+
+export function editarServicio(pedirFn, id, servicio) {
+  return pedirFn(`/api/servicios/${id}`, { method: "PUT", body: servicio });
+}
+
+export function eliminarServicio(pedirFn, id) {
+  return pedirFn(`/api/servicios/${id}`, { method: "DELETE" });
+}
 
 // ---- Validaciones del formulario ----
 
