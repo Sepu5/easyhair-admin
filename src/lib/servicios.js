@@ -14,6 +14,7 @@ export function editarServicio(pedirFn, id, servicio) {
   return pedirFn(`/api/servicios/${id}`, { method: "PUT", body: servicio });
 }
 
+// El backend no lo borra: lo deja inactivo y deja de aparecer en la lista
 export function eliminarServicio(pedirFn, id) {
   return pedirFn(`/api/servicios/${id}`, { method: "DELETE" });
 }
@@ -33,6 +34,16 @@ export function validarServicio({ nombre, duracion, precio }) {
   else if (nombreLimpio.length > 100) errores.nombre = "El nombre no puede superar los 100 caracteres.";
 
   if (!esEntero(duracion) || Number(duracion) <= 0) errores.duracion = "La duración debe ser un número entero mayor a 0.";
-  if (!esEntero(precio) || Number(precio) < 0) errores.precio = "El precio debe ser un número entero de 0 o más.";
+  if (!esEntero(precio) || Number(precio) <= 0) errores.precio = "El precio debe ser un número entero mayor a 0.";
   return errores;
+}
+
+// Convierte lo que escribió el usuario en lo que espera el backend
+export function armarServicio({ nombre, descripcion, duracion, precio }) {
+  return {
+    nombre: nombre.trim(),
+    descripcion: descripcion.trim(),
+    duracion: Number(duracion),
+    precio: Number(precio),
+  };
 }

@@ -4,6 +4,7 @@ import {
   editarServicio,
   eliminarServicio,
   validarServicio,
+  armarServicio,
 } from "@/lib/servicios";
 
 const { module, test } = QUnit;
@@ -66,22 +67,29 @@ module("servicios", () => {
   });
 
   test("el nombre es requerido y máximo 100 caracteres", (assert) => {
-    assert.ok(validarServicio({ nombre: "  ", duracion: "30", precio: "0" }).nombre);
-    assert.ok(validarServicio({ nombre: "a".repeat(101), duracion: "30", precio: "0" }).nombre);
-    assert.notOk(validarServicio({ nombre: "a".repeat(100), duracion: "30", precio: "0" }).nombre);
+    assert.ok(validarServicio({ nombre: "  ", duracion: "30", precio: "8000" }).nombre);
+    assert.ok(validarServicio({ nombre: "a".repeat(101), duracion: "30", precio: "8000" }).nombre);
+    assert.notOk(validarServicio({ nombre: "a".repeat(100), duracion: "30", precio: "8000" }).nombre);
   });
 
-  test("el precio es entero y no puede ser negativo", (assert) => {
-    assert.notOk(validarServicio({ nombre: "Corte", duracion: "30", precio: "0" }).precio);
+  test("el precio es entero y mayor a 0", (assert) => {
+    assert.notOk(validarServicio({ nombre: "Corte", duracion: "30", precio: "1" }).precio);
+    assert.ok(validarServicio({ nombre: "Corte", duracion: "30", precio: "0" }).precio);
     assert.ok(validarServicio({ nombre: "Corte", duracion: "30", precio: "-1" }).precio);
     assert.ok(validarServicio({ nombre: "Corte", duracion: "30", precio: "10.5" }).precio);
     assert.ok(validarServicio({ nombre: "Corte", duracion: "30", precio: "" }).precio);
   });
 
   test("la duración es entera y mayor a 0", (assert) => {
-    assert.ok(validarServicio({ nombre: "Corte", duracion: "0", precio: "0" }).duracion);
-    assert.ok(validarServicio({ nombre: "Corte", duracion: "abc", precio: "0" }).duracion);
-    assert.ok(validarServicio({ nombre: "Corte", duracion: "", precio: "0" }).duracion);
-    assert.notOk(validarServicio({ nombre: "Corte", duracion: "45", precio: "0" }).duracion);
+    assert.ok(validarServicio({ nombre: "Corte", duracion: "0", precio: "8000" }).duracion);
+    assert.ok(validarServicio({ nombre: "Corte", duracion: "abc", precio: "8000" }).duracion);
+    assert.ok(validarServicio({ nombre: "Corte", duracion: "", precio: "8000" }).duracion);
+    assert.notOk(validarServicio({ nombre: "Corte", duracion: "45", precio: "8000" }).duracion);
+  });
+
+  test("armarServicio convierte los textos en números y limpia los espacios", (assert) => {
+    const cuerpo = armarServicio({ nombre: " Corte ", descripcion: " ", duracion: "30", precio: "8000" });
+
+    assert.deepEqual(cuerpo, { nombre: "Corte", descripcion: "", duracion: 30, precio: 8000 });
   });
 });
