@@ -46,3 +46,21 @@ export function nombreMes(hoy) {
   const mes = Number(hoy.split("-")[1]);
   return MESES[mes - 1];
 }
+
+// ---- Consumos de materiales que registra el staff ----
+
+export function aprobarConsumo(pedirFn, id) {
+  return pedirFn(`/api/consumos/${id}/aprobar`, { method: "PUT" });
+}
+
+export function rechazarConsumo(pedirFn, id) {
+  return pedirFn(`/api/consumos/${id}/rechazar`, { method: "PUT" });
+}
+
+// "2026-11-24T15:30:00" -> "24-11-2026 15:30"
+export function formatearFechaHora(fechaHora) {
+  if (!fechaHora) return "";
+  const [fecha, hora] = fechaHora.split("T");
+  const [anio, mes, dia] = fecha.split("-");
+  return `${dia}-${mes}-${anio} ${hora.slice(0, 5)}`;
+}

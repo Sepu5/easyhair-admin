@@ -5,6 +5,7 @@ import EncabezadoPagina from "@/components/layout/EncabezadoPagina";
 import TarjetaResumen from "@/components/dashboard/TarjetaResumen";
 import ProximasReservas from "@/components/dashboard/ProximasReservas";
 import StockBajo from "@/components/dashboard/StockBajo";
+import ConsumosPendientes from "@/components/dashboard/ConsumosPendientes";
 import { useSesion } from "@/context/SesionContext";
 import { pedir } from "@/lib/api";
 import { cargarDashboard, armarTarjetas, proximasReservas, nombreMes } from "@/lib/dashboard";
@@ -17,6 +18,8 @@ export default function Dashboard() {
   const hoy = fechaHoy();
   const [datos, setDatos] = useState(null);
   const [error, setError] = useState("");
+  // al sumarle 1 se vuelve a pedir todo (después de aprobar o rechazar un consumo)
+  const [recargas, setRecargas] = useState(0);
 
   useEffect(() => {
     let vigente = true;
@@ -26,7 +29,7 @@ export default function Dashboard() {
     return () => {
       vigente = false;
     };
-  }, [hoy]);
+  }, [hoy, recargas]);
 
   const saludo = usuario ? `Hola ${usuario.nombre.split(" ")[0]}, este es el resumen del ${formatearFecha(hoy)}` : "";
 
@@ -95,6 +98,9 @@ export default function Dashboard() {
         </div>
         <div className="col-12 col-lg-6">
           <StockBajo materiales={datos.stockBajo} />
+        </div>
+        <div className="col-12">
+          <ConsumosPendientes consumos={datos.consumosPendientes} alCambiar={() => setRecargas((n) => n + 1)} />
         </div>
       </div>
     </>
