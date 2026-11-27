@@ -1,7 +1,7 @@
 import FilaServicio from "@/components/servicios/FilaServicio";
 
 // Tabla con los servicios de la peluquería.
-// Si puedeEditar es false (staff) no se muestra la columna de acciones.
+// Si puedeEditar es false (staff) no mostramos la columna de acciones.
 export default function TablaServicios({ servicios, onEditar, onEliminar, puedeEditar = true }) {
   if (servicios.length === 0) {
     return <div className="alert alert-light border">Aún no hay servicios registrados.</div>;

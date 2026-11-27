@@ -5,12 +5,12 @@ import { useRouter } from "next/navigation";
 import LoginForm from "@/components/auth/LoginForm";
 import { useSesion } from "@/context/SesionContext";
 
-// Inicio de sesión (fuera de la carpeta (panel), por eso no tiene menú)
+// Inicio de sesión. Lo dejamos fuera de la carpeta (panel) para que no tenga menú
 export default function Login() {
   const router = useRouter();
   const { haySesion, cargando } = useSesion();
 
-  // si ya había una sesión guardada, va directo al panel
+  // si ya había una sesión guardada lo mandamos directo al panel
   useEffect(() => {
     if (!cargando && haySesion) {
       router.replace("/");

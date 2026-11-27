@@ -5,8 +5,8 @@ import ModalBase from "@/components/reservas/ModalBase";
 import ResumenReserva from "@/components/reservas/ResumenReserva";
 import { fechaHoy, validarReprogramacion } from "@/lib/reservas";
 
-// Cambiar la fecha y hora de una reserva.
-// cargarHoras(fecha) pide al backend las horas libres de ese peluquero.
+// Cambiar la fecha y la hora de una reserva.
+// cargarHoras(fecha) le pide al backend las horas libres de ese peluquero.
 export default function ModalReprogramar({ reserva, cargarHoras, enviando, error, onConfirmar, onCerrar }) {
   const hoy = fechaHoy();
   const [fecha, setFecha] = useState(reserva.fecha < hoy ? hoy : reserva.fecha);
@@ -16,7 +16,7 @@ export default function ModalReprogramar({ reserva, cargarHoras, enviando, error
   const [errorHoras, setErrorHoras] = useState("");
   const [intento, setIntento] = useState(false);
 
-  // cada vez que cambia la fecha se piden las horas libres de ese día
+  // cada vez que cambia la fecha pedimos las horas libres de ese día
   useEffect(() => {
     if (!fecha || fecha < hoy) return;
     let vigente = true;

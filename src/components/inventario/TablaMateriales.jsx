@@ -1,6 +1,6 @@
 import FilaMaterial from "@/components/inventario/FilaMaterial";
 
-// Tabla con los materiales; idsBajos son los que el backend marcó con stock bajo
+// Tabla con los materiales; en idsBajos vienen los que el backend marcó con stock bajo
 export default function TablaMateriales({ materiales, idsBajos, onEditar, onComprar }) {
   if (materiales.length === 0) {
     return <div className="alert alert-light border">Aún no hay materiales registrados.</div>;

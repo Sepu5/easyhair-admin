@@ -4,7 +4,7 @@ import ModalBase from "@/components/reservas/ModalBase";
 import { TIPOS, CATEGORIAS } from "@/lib/finanzas";
 import { formatearPrecio, formatearFecha } from "@/lib/formato";
 
-// Confirmación antes de eliminar un movimiento (el borrado no se puede deshacer)
+// Pedimos confirmación antes de eliminar un movimiento porque no se puede deshacer
 export default function ModalEliminarMovimiento({ movimiento, enviando, error, onConfirmar, onCerrar }) {
   const tipo = TIPOS[movimiento.tipo]?.texto.toLowerCase() || "movimiento";
 

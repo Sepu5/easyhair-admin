@@ -29,27 +29,27 @@ export default function Reservas() {
   const [reservas, setReservas] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
-  // al sumarle 1 se vuelve a pedir la agenda (después de una acción)
+  // cada vez que le sumamos 1 se vuelve a pedir la agenda (lo usamos después de cada acción)
   const [recargas, setRecargas] = useState(0);
 
-  // acción abierta en un modal: { tipo, reserva } o null
+  // aquí guardamos qué modal está abierto: { tipo, reserva } o null
   const [accion, setAccion] = useState(null);
   const [enviando, setEnviando] = useState(false);
   const [errorAccion, setErrorAccion] = useState("");
   const [aviso, setAviso] = useState("");
 
-  // Los peluqueros se piden una sola vez
+  // Los peluqueros los pedimos una sola vez, al entrar
   useEffect(() => {
     cargarPeluqueros(pedir)
       .then(setPeluqueros)
       .catch((e) => setError(e.message));
   }, []);
 
-  // La agenda se vuelve a pedir cuando cambia la fecha, el peluquero o después de una acción
-  // (el filtro de estado se aplica aquí mismo, sin ir al backend)
+  // La agenda la volvemos a pedir cuando cambia la fecha, el peluquero o después de una acción
+  // (el filtro de estado lo aplicamos aquí mismo, sin volver a llamar al backend)
   useEffect(() => {
     if (peluqueros.length === 0) return;
-    let vigente = true; // evita mostrar una respuesta vieja si se cambia rápido el filtro
+    let vigente = true; // con esto evitamos mostrar una respuesta vieja si alguien cambia el filtro muy rápido
 
     async function cargar() {
       setCargando(true);
@@ -84,7 +84,7 @@ export default function Reservas() {
     if (!enviando) setAccion(null);
   }
 
-  // Ejecuta la acción en el backend; si sale bien cierra el modal y recarga la agenda
+  // Mandamos la acción al backend; si sale bien cerramos el modal y recargamos la agenda
   async function ejecutar(llamada, mensajeExito) {
     setEnviando(true);
     setErrorAccion("");
@@ -100,7 +100,7 @@ export default function Reservas() {
     }
   }
 
-  // useCallback para que el modal no vuelva a pedir las horas en cada render
+  // usamos useCallback para que el modal no vuelva a pedir las horas en cada render
   const peluqueroDeAccion = accion ? accion.reserva.peluqueroId : null;
   const cargarHoras = useCallback(
     (fecha) => cargarHorasLibres(pedir, fecha, peluqueroDeAccion),
@@ -108,7 +108,7 @@ export default function Reservas() {
   );
 
   const visibles = filtrarPorEstado(reservas, filtros.estado);
-  // los bloqueos son de un peluquero: el elegido en el filtro (o el único que haya)
+  // los bloqueos son de un solo peluquero: usamos el del filtro (o el único que haya)
   const peluqueroBloqueos =
     peluqueros.find((p) => String(p.id) === String(filtros.peluqueroId)) ||
     (peluqueros.length === 1 ? peluqueros[0] : null);

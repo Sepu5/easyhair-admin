@@ -1,9 +1,9 @@
 import { estaActiva, opcionesMenu } from "@/lib/menu";
 
 // Secciones que puede ver cada rol.
-// El STAFF trabaja en la peluquería: ve su agenda, los servicios y los
+// El STAFF trabaja en la peluquería: le dejamos ver la agenda, los servicios y los
 // peluqueros, pero no la plata, el inventario ni las cuentas de usuario.
-// Esto es lo mismo que exige el backend (si no, responde 403).
+// Son las mismas reglas que pusimos en el backend (si no se cumplen, responde 403).
 export const RUTAS_POR_ROL = {
   ADMIN: ["/", "/reservas", "/servicios", "/peluqueros", "/inventario", "/finanzas", "/usuarios", "/perfil"],
   STAFF: ["/", "/reservas", "/servicios", "/peluqueros", "/perfil"],
@@ -16,7 +16,7 @@ export const ACCIONES_ADMIN = [
   "verResumenAdmin",
 ];
 
-// Dice si el rol puede entrar a una ruta (incluye sus subpáginas)
+// Dice si el rol puede entrar a una ruta (incluidas sus subpáginas)
 export function puedeVerRuta(rol, ruta) {
   const permitidas = RUTAS_POR_ROL[rol];
   if (!permitidas) {
@@ -30,7 +30,7 @@ export function menuDelRol(rol) {
   return opcionesMenu.filter((opcion) => puedeVerRuta(rol, opcion.href));
 }
 
-// Nombre del panel que se muestra arriba según quién entró
+// Nombre del panel que mostramos arriba según quién entró
 export function tituloPanel(rol) {
   return rol === "STAFF" ? "EasyHair Staff" : "EasyHair Admin";
 }

@@ -6,7 +6,7 @@ import Campo from "@/components/formularios/Campo";
 import { TIPOS, CATEGORIAS, validarMovimiento, armarMovimiento } from "@/lib/finanzas";
 import { fechaHoy } from "@/lib/reservas";
 
-// Formulario para registrar un ingreso o egreso a mano
+// Formulario para registrar a mano un ingreso o un egreso
 export default function FormularioMovimiento({ enviando, error, onGuardar, onCerrar }) {
   const [valores, setValores] = useState({
     tipo: "",

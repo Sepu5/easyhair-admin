@@ -2,7 +2,7 @@
 
 import { useSesion } from "@/context/SesionContext";
 
-// Nombre y rol del usuario logueado (va en la barra de arriba)
+// Nombre y rol del usuario logueado (lo mostramos en la barra de arriba)
 export default function UsuarioActual() {
   const { usuario } = useSesion();
   if (!usuario) return null;

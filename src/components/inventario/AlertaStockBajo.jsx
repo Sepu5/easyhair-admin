@@ -1,4 +1,4 @@
-// Aviso con los materiales que hay que comprar (si no hay ninguno, no dibuja nada)
+// Aviso con los materiales que hay que comprar (si no falta ninguno, no mostramos nada)
 export default function AlertaStockBajo({ materiales }) {
   if (materiales.length === 0) return null;
 

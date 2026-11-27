@@ -5,7 +5,7 @@ import ModalBase from "@/components/reservas/ModalBase";
 import Campo from "@/components/formularios/Campo";
 import { validarPeluquero, armarPeluquero } from "@/lib/peluqueros";
 
-// Formulario para crear o editar un peluquero (si llega "peluquero" es editar)
+// Formulario para crear o editar un peluquero (si nos llega "peluquero" es porque estamos editando)
 export default function FormularioPeluquero({ peluquero, enviando, error, onGuardar, onCerrar }) {
   const [valores, setValores] = useState({
     nombre: peluquero?.nombre ?? "",

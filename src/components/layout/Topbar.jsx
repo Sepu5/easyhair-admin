@@ -5,7 +5,7 @@ import UsuarioActual from "@/components/layout/UsuarioActual";
 import { useSesion } from "@/context/SesionContext";
 import { tituloPanel } from "@/lib/permisos";
 
-// Barra negra de arriba con el nombre y el botón del menú en celular.
+// Barra negra de arriba con el nombre del panel y el botón del menú en celular.
 // El nombre cambia según el rol (Admin o Staff).
 export default function Topbar() {
   const { usuario } = useSesion();

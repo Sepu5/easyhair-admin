@@ -1,4 +1,4 @@
-// Lógica del inventario (sin React, para poder probarla fácil)
+// Lógica del inventario. La dejamos sin React para poder probarla fácil con QUnit
 
 // ---- Llamadas al backend ----
 
@@ -8,18 +8,18 @@ export async function cargarMateriales(pedirFn) {
   return [...materiales].sort((a, b) => a.nombre.localeCompare(b.nombre));
 }
 
-// El backend decide cuáles tienen stock bajo (stock <= stock mínimo)
+// Cuáles tienen stock bajo lo decide el backend (stock <= stock mínimo)
 export function cargarStockBajo(pedirFn) {
   return pedirFn("/api/materiales/stock-bajo");
 }
 
-// Compras con las más nuevas primero
+// Compras, con las más nuevas primero
 export async function cargarCompras(pedirFn) {
   const compras = await pedirFn("/api/compras");
   return [...compras].sort((a, b) => b.fecha.localeCompare(a.fecha) || b.id - a.id);
 }
 
-// Las tres listas a la vez (en paralelo con Promise.all)
+// Pedimos las tres listas a la vez (en paralelo con Promise.all)
 export async function cargarInventario(pedirFn) {
   const [materiales, bajos, compras] = await Promise.all([
     cargarMateriales(pedirFn),
@@ -37,14 +37,14 @@ export function editarMaterial(pedirFn, id, material) {
   return pedirFn(`/api/materiales/${id}`, { method: "PUT", body: material });
 }
 
-// El backend suma el stock y anota el gasto en Finanzas
+// Al registrar la compra, el backend suma el stock y anota el gasto en Finanzas
 export function registrarCompra(pedirFn, compra) {
   return pedirFn("/api/compras", { method: "POST", body: compra });
 }
 
 // ---- Validaciones de los formularios ----
 
-// Acepta "30" pero no "", "3.5" ni "abc" (el formulario entrega textos)
+// Acepta "30" pero no "", "3.5" ni "abc" (los inputs siempre nos entregan texto)
 function esEntero(valor) {
   const texto = String(valor).trim();
   return texto !== "" && Number.isInteger(Number(texto));
@@ -66,7 +66,7 @@ export function validarMaterial({ nombre, unidad, stock, stockMinimo, precioUnit
     errores.stockMinimo = "El stock mínimo debe ser un número entero de 0 o más.";
   }
 
-  // el precio es opcional, pero si se escribe tiene que ser válido
+  // el precio es opcional, pero si lo escriben tiene que ser válido
   const precio = String(precioUnitario).trim();
   if (precio !== "" && (!esEntero(precio) || Number(precio) < 0)) {
     errores.precioUnitario = "El precio debe ser un número entero de 0 o más.";
@@ -86,7 +86,7 @@ export function validarCompra({ materialId, cantidad, costoTotal }) {
 
 // ---- Cuerpos para el backend ----
 
-// Convierte lo que escribió el usuario en lo que espera el backend (precio vacío = null)
+// Pasamos lo que escribió el usuario al formato que espera el backend (precio vacío = null)
 export function armarMaterial({ nombre, unidad, stock, stockMinimo, precioUnitario, activo }) {
   const precio = String(precioUnitario).trim();
   return {

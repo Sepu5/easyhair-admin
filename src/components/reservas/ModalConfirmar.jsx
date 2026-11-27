@@ -3,7 +3,7 @@
 import ModalBase from "@/components/reservas/ModalBase";
 import ResumenReserva from "@/components/reservas/ResumenReserva";
 
-// Confirmación simple (atender o marcar que no asistió)
+// Confirmación simple (para atender o marcar que no asistió)
 export default function ModalConfirmar({ titulo, mensaje, textoBoton, color, reserva, enviando, error, onConfirmar, onCerrar }) {
   return (
     <ModalBase

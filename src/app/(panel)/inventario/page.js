@@ -14,17 +14,17 @@ export default function Inventario() {
   const [inventario, setInventario] = useState({ materiales: [], bajos: [], compras: [] });
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
-  // al sumarle 1 se vuelve a pedir todo (después de guardar)
+  // cada vez que le sumamos 1 se vuelve a pedir todo (lo usamos después de guardar)
   const [recargas, setRecargas] = useState(0);
 
-  // acción abierta en un modal: { tipo: "nuevo" | "editar" | "compra", material } o null
+  // aquí guardamos qué modal está abierto: { tipo: "nuevo" | "editar" | "compra", material } o null
   const [accion, setAccion] = useState(null);
   const [enviando, setEnviando] = useState(false);
   const [errorAccion, setErrorAccion] = useState("");
   const [aviso, setAviso] = useState("");
 
   useEffect(() => {
-    let vigente = true; // evita mostrar una respuesta vieja si se cambia rápido
+    let vigente = true; // con esto evitamos mostrar una respuesta vieja si alguien cambia de página muy rápido
 
     async function cargar() {
       setCargando(true);
@@ -55,7 +55,7 @@ export default function Inventario() {
     if (!enviando) setAccion(null);
   }
 
-  // Ejecuta la acción en el backend; si sale bien cierra el modal y recarga todo
+  // Mandamos la acción al backend; si sale bien cerramos el modal y recargamos todo
   async function ejecutar(llamada, mensajeExito) {
     setEnviando(true);
     setErrorAccion("");

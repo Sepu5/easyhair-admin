@@ -3,9 +3,9 @@ import RutaPermitida from "@/components/layout/RutaPermitida";
 import Sidebar from "@/components/layout/Sidebar";
 import Topbar from "@/components/layout/Topbar";
 
-// Molde de las páginas del panel: barra de arriba, menú a la izquierda y contenido al centro.
-// La carpeta (panel) va entre paréntesis para que no aparezca en la URL.
-// PanelProtegido no deja ver nada si no hay sesión y RutaPermitida revisa el rol.
+// Este es el molde de todas las páginas del panel: barra arriba, menú a la izquierda y contenido al centro.
+// Pusimos la carpeta (panel) entre paréntesis para que Next no la agregue a la URL.
+// PanelProtegido no deja ver nada sin sesión y RutaPermitida revisa si el rol puede ver la página.
 export default function PanelLayout({ children }) {
   return (
     <PanelProtegido>

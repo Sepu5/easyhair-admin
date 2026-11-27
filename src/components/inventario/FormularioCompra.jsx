@@ -5,7 +5,7 @@ import ModalBase from "@/components/reservas/ModalBase";
 import Campo from "@/components/formularios/Campo";
 import { validarCompra, armarCompra } from "@/lib/inventario";
 
-// Registrar la compra de un material (si llega materialInicial ya viene elegido)
+// Registrar la compra de un material (si llega materialInicial, ese material ya viene elegido)
 export default function FormularioCompra({ materiales, materialInicial, enviando, error, onGuardar, onCerrar }) {
   const [valores, setValores] = useState({
     materialId: materialInicial ? String(materialInicial.id) : "",

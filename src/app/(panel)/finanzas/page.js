@@ -17,19 +17,19 @@ export default function Finanzas() {
   const [datos, setDatos] = useState({ movimientos: [], resumen: null, porPeluquero: [], porCategoria: [], peluqueros: [] });
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
-  // al sumarle 1 se vuelve a pedir todo (después de guardar o eliminar)
+  // cada vez que le sumamos 1 se vuelve a pedir todo (lo usamos después de guardar o eliminar)
   const [recargas, setRecargas] = useState(0);
 
-  // acción abierta en un modal: { tipo: "nuevo" | "eliminar", movimiento } o null
+  // aquí guardamos qué modal está abierto: { tipo: "nuevo" | "eliminar", movimiento } o null si no hay ninguno
   const [accion, setAccion] = useState(null);
   const [enviando, setEnviando] = useState(false);
   const [errorAccion, setErrorAccion] = useState("");
   const [aviso, setAviso] = useState("");
 
-  // Se vuelve a pedir todo cuando cambia el mes, el tipo o después de una acción
+  // Volvemos a pedir todo cuando cambia el mes, el tipo o después de una acción
   useEffect(() => {
     if (!mesValido(filtros.mes)) return;
-    let vigente = true; // evita mostrar una respuesta vieja si se cambia rápido el filtro
+    let vigente = true; // con esto evitamos mostrar una respuesta vieja si alguien cambia el filtro muy rápido
 
     async function cargar() {
       setCargando(true);
@@ -64,7 +64,7 @@ export default function Finanzas() {
     if (!enviando) setAccion(null);
   }
 
-  // Ejecuta la acción en el backend; si sale bien cierra el modal y recarga todo
+  // Mandamos la acción al backend; si sale bien cerramos el modal y recargamos todo
   async function ejecutar(llamada, mensajeExito) {
     setEnviando(true);
     setErrorAccion("");
@@ -80,8 +80,8 @@ export default function Finanzas() {
     }
   }
 
-  // Al registrar, la página se mueve al mes del movimiento y quita el filtro de tipo
-  // para que el movimiento nuevo se vea en la tabla
+  // Después de registrar nos movemos al mes del movimiento y quitamos el filtro de tipo,
+  // así el movimiento nuevo aparece altiro en la tabla
   function guardar(movimiento) {
     return ejecutar(async () => {
       await crearMovimiento(pedir, movimiento);

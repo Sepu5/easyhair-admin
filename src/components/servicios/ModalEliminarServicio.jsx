@@ -2,7 +2,7 @@
 
 import ModalBase from "@/components/reservas/ModalBase";
 
-// Confirmación antes de eliminar un servicio
+// Pedimos confirmación antes de eliminar un servicio
 export default function ModalEliminarServicio({ servicio, enviando, error, onConfirmar, onCerrar }) {
   return (
     <ModalBase

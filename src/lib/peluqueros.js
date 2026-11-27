@@ -1,7 +1,7 @@
-// Lógica de los peluqueros (sin React, para poder probarla fácil)
+// Lógica de los peluqueros. La dejamos sin React para poder probarla fácil con QUnit
 import { validarCorreo } from "@/lib/validaciones";
 
-// Peluqueros activos ordenados por nombre (el backend solo entrega los activos)
+// Peluqueros activos ordenados por nombre (el backend solo nos entrega los activos)
 export async function listarPeluqueros(pedirFn) {
   const peluqueros = await pedirFn("/api/peluqueros");
   return [...peluqueros].sort((a, b) => a.nombre.localeCompare(b.nombre));
@@ -32,7 +32,7 @@ export function validarPeluquero({ nombre, correo }) {
   return errores;
 }
 
-// Deja los datos como los espera el backend (correo sin espacios y en minúsculas)
+// Dejamos los datos como los espera el backend (correo sin espacios y en minúsculas)
 export function armarPeluquero({ nombre, correo, activo }) {
   return {
     nombre: nombre.trim(),

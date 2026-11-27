@@ -5,11 +5,11 @@ import ModalBase from "@/components/reservas/ModalBase";
 import { pedir } from "@/lib/api";
 import { aprobarConsumo, rechazarConsumo, formatearFechaHora } from "@/lib/dashboard";
 
-// Consumos de materiales que registró el staff y que la administración tiene que revisar.
-// Al aprobar se descuenta el stock; al rechazar no pasa nada con el inventario.
-// alCambiar() avisa al dashboard para que recargue los números.
+// Consumos de materiales que el staff registra desde la app y que el admin tiene que revisar.
+// Al aprobar, el backend descuenta el stock; al rechazar no se toca el inventario.
+// Con alCambiar() le avisamos al dashboard para que recargue los números.
 export default function ConsumosPendientes({ consumos, alCambiar, pedirFn = pedir }) {
-  // { tipo: "aprobar" | "rechazar", consumo } o null
+  // qué confirmación está abierta: { tipo: "aprobar" | "rechazar", consumo } o null
   const [accion, setAccion] = useState(null);
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState("");
@@ -35,7 +35,7 @@ export default function ConsumosPendientes({ consumos, alCambiar, pedirFn = pedi
       setAccion(null);
       if (alCambiar) alCambiar();
     } catch (e) {
-      // ej: "No hay stock suficiente de Tintura (quedan 1 unidades)"
+      // por ejemplo: "No hay stock suficiente de Tintura (quedan 1 unidades)"
       setError(e.message);
     } finally {
       setEnviando(false);

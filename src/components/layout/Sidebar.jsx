@@ -5,8 +5,8 @@ import BotonCerrarSesion from "@/components/layout/BotonCerrarSesion";
 import { useSesion } from "@/context/SesionContext";
 import { menuDelRol, tituloPanel } from "@/lib/permisos";
 
-// Menú vertical del panel. En celular se transforma en offcanvas.
-// Solo muestra las secciones que el rol del usuario puede ver.
+// Menú vertical del panel. En celular se convierte en offcanvas.
+// Solo mostramos las secciones que el rol del usuario puede ver.
 export default function Sidebar() {
   const { usuario } = useSesion();
 

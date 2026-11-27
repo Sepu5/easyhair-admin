@@ -1,4 +1,4 @@
-// Formatos chilenos para mostrar datos en el panel
+// Formatos chilenos que usamos para mostrar datos en el panel
 
 // 25000 -> "$25.000"
 export function formatearPrecio(valor) {

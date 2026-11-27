@@ -5,7 +5,7 @@ import ModalBase from "@/components/reservas/ModalBase";
 import Campo from "@/components/formularios/Campo";
 import { validarServicio, armarServicio } from "@/lib/servicios";
 
-// Formulario para crear o editar un servicio (si llega "servicio" es editar)
+// Formulario para crear o editar un servicio (si nos llega "servicio" es porque estamos editando)
 export default function FormularioServicio({ servicio, enviando, error, onGuardar, onCerrar }) {
   const [valores, setValores] = useState({
     nombre: servicio?.nombre ?? "",

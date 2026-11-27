@@ -4,27 +4,27 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { leerSesion, guardarSesion, borrarSesion, debeRenovar, renovarSesion, puedeEntrarAlPanel } from "@/lib/sesion";
 import { EVENTO_SESION_EXPIRADA, pedir } from "@/lib/api";
 
-// Cada cuánto se revisa si el token está por vencer (5 minutos)
+// Cada cuánto revisamos si el token está por vencer (5 minutos)
 const CADA_CUANTO_REVISAR = 5 * 60 * 1000;
 
-// Context: comparte el usuario que inició sesión con todo el panel
+// Con este Context compartimos el usuario que inició sesión con todo el panel
 const SesionContext = createContext(null);
 
 export function SesionProvider({ children }) {
   const [usuario, setUsuario] = useState(null);
-  // true mientras todavía no revisamos si había una sesión guardada
+  // queda en true mientras todavía no revisamos si había una sesión guardada
   const [cargando, setCargando] = useState(true);
 
-  // Al cargar o recargar la página: recuperar la sesión guardada (si no venció)
+  // Al cargar o recargar la página recuperamos la sesión guardada (si no venció)
   useEffect(() => {
     const sesion = leerSesion();
-    // localStorage solo existe en el navegador, por eso se lee aquí
+    // localStorage solo existe en el navegador, por eso lo leemos dentro del useEffect
     // eslint-disable-next-line react-hooks/set-state-in-effect
     if (sesion) setUsuario(sesion.usuario);
     setCargando(false);
   }, []);
 
-  // Si el backend rechaza el token (401), se cierra la sesión en todo el panel
+  // Si el backend rechaza el token (401), cerramos la sesión en todo el panel
   useEffect(() => {
     function alExpirar() {
       borrarSesion();
@@ -34,8 +34,8 @@ export function SesionProvider({ children }) {
     return () => window.removeEventListener(EVENTO_SESION_EXPIRADA, alExpirar);
   }, []);
 
-  // Mientras haya sesión, cada 5 minutos se revisa si el token está por vencer.
-  // Si le queda menos de 1 hora se pide uno nuevo, así la sesión no se corta
+  // Mientras haya sesión, cada 5 minutos revisamos si el token está por vencer.
+  // Si le queda menos de 1 hora pedimos uno nuevo, así la sesión no se corta
   // mientras alguien está usando el panel.
   const haySesion = usuario !== null;
   useEffect(() => {
@@ -50,12 +50,12 @@ export function SesionProvider({ children }) {
           guardarSesion(nueva.token, nueva.usuario);
           setUsuario(nueva.usuario);
         } else {
-          // si le quitaron el acceso al panel, se cierra la sesión
+          // si le quitaron el acceso al panel, cerramos la sesión
           borrarSesion();
           setUsuario(null);
         }
       } catch {
-        // si falla (por ejemplo sin internet) se intenta de nuevo en la próxima revisión
+        // si falla (por ejemplo sin internet) lo volvemos a intentar en la próxima revisión
       }
     }
 
