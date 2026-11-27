@@ -1,6 +1,7 @@
 import {
   listarUsuarios,
   crearUsuario,
+  editarUsuario,
   cambiarRol,
   eliminarUsuario,
   filtrarUsuarios,
@@ -116,5 +117,28 @@ module("usuarios: validaciones", () => {
       password: "secreta1",
       rol: "STAFF",
     });
+  });
+});
+
+
+module("usuarios: editar", () => {
+  test("editar manda PUT al usuario sin el rol", async (assert) => {
+    const { pedirFalso, pedidos } = crearPedirFalso();
+    await editarUsuario(pedirFalso, 2, armarUsuario({ ...valido, password: "" }, true));
+    assert.deepEqual(pedidos[0], {
+      ruta: "/api/usuarios/2",
+      metodo: "PUT",
+      body: { nombre: "Martina López", correo: "martina@easyhair.cl" },
+    });
+  });
+
+  test("al editar la contraseña es opcional, pero si se escribe debe tener 6 o más", (assert) => {
+    assert.deepEqual(validarUsuario({ ...valido, password: "", rol: "" }, true), {});
+    assert.ok(validarUsuario({ ...valido, password: "123" }, true).password);
+  });
+
+  test("al editar con contraseña nueva se manda la contraseña", (assert) => {
+    assert.equal(armarUsuario(valido, true).password, "secreta1");
+    assert.equal(armarUsuario(valido, true).rol, undefined);
   });
 });

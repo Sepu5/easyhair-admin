@@ -21,6 +21,11 @@ export function crearUsuario(pedirFn, usuario) {
   return pedirFn("/api/usuarios", { method: "POST", body: usuario });
 }
 
+// Edita nombre, correo y (si viene) contraseña. El rol se cambia aparte.
+export function editarUsuario(pedirFn, id, datos) {
+  return pedirFn(`/api/usuarios/${id}`, { method: "PUT", body: datos });
+}
+
 export function cambiarRol(pedirFn, id, rol) {
   return pedirFn(`/api/usuarios/${id}/rol`, { method: "PUT", body: { rol } });
 }
@@ -60,7 +65,8 @@ export function esCuentaPropia(usuario, idSesion) {
 
 // ---- Validaciones del formulario (las mismas reglas que el backend) ----
 
-export function validarUsuario({ nombre, correo, password, rol }) {
+// Al editar, la contraseña es opcional (vacía = no se cambia) y el rol no se pide
+export function validarUsuario({ nombre, correo, password, rol }, editando = false) {
   const errores = {};
 
   const nombreLimpio = nombre.trim();
@@ -75,20 +81,25 @@ export function validarUsuario({ nombre, correo, password, rol }) {
     if (errorCorreo) errores.correo = errorCorreo;
   }
 
-  if (!password) errores.password = "Escribe una contraseña.";
-  else if (password.length < 6) errores.password = "La contraseña debe tener al menos 6 caracteres.";
+  if (!password) {
+    if (!editando) errores.password = "Escribe una contraseña.";
+  } else if (password.length < 6) {
+    errores.password = "La contraseña debe tener al menos 6 caracteres.";
+  }
 
-  if (!ROLES.includes(rol)) errores.rol = "Elige un rol.";
+  if (!editando && !ROLES.includes(rol)) errores.rol = "Elige un rol.";
 
   return errores;
 }
 
-// Deja los datos como los espera el backend
-export function armarUsuario({ nombre, correo, password, rol }) {
-  return {
+// Deja los datos como los espera el backend.
+// Al editar no se manda el rol, y la contraseña solo si se escribió una nueva.
+export function armarUsuario({ nombre, correo, password, rol }, editando = false) {
+  const datos = {
     nombre: nombre.trim(),
     correo: correo.trim().toLowerCase(),
-    password,
-    rol,
   };
+  if (!editando) return { ...datos, password, rol };
+  if (password) datos.password = password;
+  return datos;
 }
