@@ -1,0 +1,12 @@
+# Levanta la web de administración en el puerto 3000 del servidor.
+# En el EC2: docker compose up -d --build
+services:
+  web:
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://54.152.113.142}
+    container_name: easyhair-admin
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
