@@ -1,5 +1,5 @@
 // Opciones del menú lateral.
-// Más adelante (tarjeta 4) se filtran según el rol del usuario.
+// Se filtran según el rol del usuario en lib/permisos.js
 export const opcionesMenu = [
   { href: "/", texto: "Dashboard", icono: "bi-house-fill" },
   { href: "/reservas", texto: "Reservas", icono: "bi-calendar-check" },
