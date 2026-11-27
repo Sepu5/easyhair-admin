@@ -6,6 +6,8 @@ import {
   leerSesion,
   borrarSesion,
   CLAVE_USUARIO,
+  debeRenovar,
+  renovarSesion,
 } from "@/lib/sesion";
 import { CLAVE_TOKEN } from "@/lib/api";
 
@@ -92,5 +94,38 @@ module("sesion: guardar y leer", (hooks) => {
 
     assert.equal(localStorage.getItem(CLAVE_TOKEN), null);
     assert.equal(localStorage.getItem(CLAVE_USUARIO), null);
+  });
+});
+
+
+module("sesion: renovar token", () => {
+  const AHORA = Date.UTC(2026, 10, 26, 12, 0, 0);
+  const enMinutos = (minutos) => Math.floor((AHORA + minutos * 60 * 1000) / 1000);
+
+  test("renueva cuando al token le queda menos de 1 hora", (assert) => {
+    assert.ok(debeRenovar(tokenFalso({ exp: enMinutos(30) }), AHORA));
+  });
+
+  test("no renueva si al token le queda harto tiempo", (assert) => {
+    assert.notOk(debeRenovar(tokenFalso({ exp: enMinutos(600) }), AHORA));
+  });
+
+  test("no renueva un token vencido ni uno inválido", (assert) => {
+    assert.notOk(debeRenovar(tokenFalso({ exp: enMinutos(-5) }), AHORA));
+    assert.notOk(debeRenovar("esto-no-es-un-token", AHORA));
+  });
+
+  test("renovarSesion pide un token nuevo con POST a /api/auth/refresh", async (assert) => {
+    const pedidos = [];
+    const pedirFalso = async (ruta, opciones) => {
+      pedidos.push({ ruta, metodo: opciones.method });
+      return { token: "token-nuevo", usuario: { id: 5, nombre: "Administrador", rol: "ADMIN" } };
+    };
+
+    const nueva = await renovarSesion(pedirFalso);
+
+    assert.deepEqual(pedidos, [{ ruta: "/api/auth/refresh", metodo: "POST" }]);
+    assert.equal(nueva.token, "token-nuevo");
+    assert.equal(nueva.usuario.rol, "ADMIN");
   });
 });

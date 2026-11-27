@@ -5,10 +5,15 @@ import EncabezadoPagina from "@/components/layout/EncabezadoPagina";
 import TablaServicios from "@/components/servicios/TablaServicios";
 import FormularioServicio from "@/components/servicios/FormularioServicio";
 import ModalEliminarServicio from "@/components/servicios/ModalEliminarServicio";
+import { useSesion } from "@/context/SesionContext";
 import { pedir } from "@/lib/api";
+import { puedeHacer } from "@/lib/permisos";
 import { cargarServicios, crearServicio, editarServicio, eliminarServicio } from "@/lib/servicios";
 
+// El staff solo puede ver la lista; crear, editar y eliminar es del admin
 export default function Servicios() {
+  const { usuario } = useSesion();
+  const puedeEditar = puedeHacer(usuario?.rol, "editarServicios");
   const [servicios, setServicios] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
@@ -80,11 +85,13 @@ export default function Servicios() {
     <>
       <EncabezadoPagina titulo="Servicios" descripcion="Servicios que ofrece la peluquería, con su duración y precio" />
 
-      <div className="d-flex justify-content-end mb-3">
-        <button type="button" className="btn btn-primary" onClick={() => abrirAccion("nuevo")}>
-          <i className="bi bi-plus-lg"></i> Nuevo servicio
-        </button>
-      </div>
+      {puedeEditar && (
+        <div className="d-flex justify-content-end mb-3">
+          <button type="button" className="btn btn-primary" onClick={() => abrirAccion("nuevo")}>
+            <i className="bi bi-plus-lg"></i> Nuevo servicio
+          </button>
+        </div>
+      )}
 
       {aviso && (
         <div className="alert alert-success alert-dismissible">
@@ -105,6 +112,7 @@ export default function Servicios() {
           servicios={servicios}
           onEditar={(servicio) => abrirAccion("editar", servicio)}
           onEliminar={(servicio) => abrirAccion("eliminar", servicio)}
+          puedeEditar={puedeEditar}
         />
       )}
 

@@ -4,10 +4,15 @@ import { useEffect, useState } from "react";
 import EncabezadoPagina from "@/components/layout/EncabezadoPagina";
 import TablaPeluqueros from "@/components/peluqueros/TablaPeluqueros";
 import FormularioPeluquero from "@/components/peluqueros/FormularioPeluquero";
+import { useSesion } from "@/context/SesionContext";
 import { pedir } from "@/lib/api";
+import { puedeHacer } from "@/lib/permisos";
 import { listarPeluqueros, crearPeluquero, editarPeluquero } from "@/lib/peluqueros";
 
+// El staff solo puede ver la lista; crear y editar es del admin
 export default function Peluqueros() {
+  const { usuario } = useSesion();
+  const puedeEditar = puedeHacer(usuario?.rol, "editarPeluqueros");
   const [peluqueros, setPeluqueros] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
@@ -80,11 +85,13 @@ export default function Peluqueros() {
     <>
       <EncabezadoPagina titulo="Peluqueros" descripcion="Equipo de la peluquería y su correo de acceso" />
 
-      <div className="d-flex justify-content-end mb-3">
-        <button type="button" className="btn btn-primary" onClick={() => abrirAccion("nuevo")}>
-          <i className="bi bi-plus-lg"></i> Nuevo peluquero
-        </button>
-      </div>
+      {puedeEditar && (
+        <div className="d-flex justify-content-end mb-3">
+          <button type="button" className="btn btn-primary" onClick={() => abrirAccion("nuevo")}>
+            <i className="bi bi-plus-lg"></i> Nuevo peluquero
+          </button>
+        </div>
+      )}
 
       {aviso && (
         <div className="alert alert-success alert-dismissible">
@@ -101,7 +108,11 @@ export default function Peluqueros() {
           </div>
         </div>
       ) : (
-        <TablaPeluqueros peluqueros={peluqueros} onEditar={(peluquero) => abrirAccion("editar", peluquero)} />
+        <TablaPeluqueros
+          peluqueros={peluqueros}
+          onEditar={(peluquero) => abrirAccion("editar", peluquero)}
+          puedeEditar={puedeEditar}
+        />
       )}
 
       {accion && (

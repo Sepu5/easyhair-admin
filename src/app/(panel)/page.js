@@ -11,10 +11,13 @@ import { pedir } from "@/lib/api";
 import { cargarDashboard, armarTarjetas, proximasReservas, nombreMes } from "@/lib/dashboard";
 import { formatearPrecio, formatearFecha } from "@/lib/formato";
 import { fechaHoy } from "@/lib/reservas";
+import { puedeHacer } from "@/lib/permisos";
 
-// Dashboard: resumen del día de la peluquería
+// Dashboard: resumen del día de la peluquería.
+// El admin ve todo; el staff solo ve las reservas de hoy.
 export default function Dashboard() {
   const { usuario } = useSesion();
+  const esAdmin = puedeHacer(usuario?.rol, "verResumenAdmin");
   const hoy = fechaHoy();
   const [datos, setDatos] = useState(null);
   const [error, setError] = useState("");
@@ -23,13 +26,13 @@ export default function Dashboard() {
 
   useEffect(() => {
     let vigente = true;
-    cargarDashboard(pedir, hoy)
+    cargarDashboard(pedir, hoy, esAdmin)
       .then((respuesta) => vigente && setDatos(respuesta))
       .catch((e) => vigente && setError(e.message));
     return () => {
       vigente = false;
     };
-  }, [hoy, recargas]);
+  }, [hoy, recargas, esAdmin]);
 
   const saludo = usuario ? `Hola ${usuario.nombre.split(" ")[0]}, este es el resumen del ${formatearFecha(hoy)}` : "";
 
@@ -69,39 +72,47 @@ export default function Dashboard() {
           icono="bi-calendar-check"
           color="primary"
         />
-        <TarjetaResumen
-          titulo={`Ingresos de ${nombreMes(hoy)}`}
-          valor={formatearPrecio(tarjetas.ingresosMes)}
-          detalle={`Ganancia: ${formatearPrecio(tarjetas.gananciaMes)}`}
-          icono="bi-cash-coin"
-          color="success"
-        />
-        <TarjetaResumen
-          titulo="Stock bajo"
-          valor={tarjetas.stockBajo}
-          detalle="materiales por comprar"
-          icono="bi-box-seam"
-          color="warning"
-        />
-        <TarjetaResumen
-          titulo="Consumos por revisar"
-          valor={tarjetas.consumosPendientes}
-          detalle="registrados por el staff"
-          icono="bi-clipboard-check"
-          color="danger"
-        />
+        {esAdmin && (
+          <>
+            <TarjetaResumen
+              titulo={`Ingresos de ${nombreMes(hoy)}`}
+              valor={formatearPrecio(tarjetas.ingresosMes)}
+              detalle={`Ganancia: ${formatearPrecio(tarjetas.gananciaMes)}`}
+              icono="bi-cash-coin"
+              color="success"
+            />
+            <TarjetaResumen
+              titulo="Stock bajo"
+              valor={tarjetas.stockBajo}
+              detalle="materiales por comprar"
+              icono="bi-box-seam"
+              color="warning"
+            />
+            <TarjetaResumen
+              titulo="Consumos por revisar"
+              valor={tarjetas.consumosPendientes}
+              detalle="registrados por el staff"
+              icono="bi-clipboard-check"
+              color="danger"
+            />
+          </>
+        )}
       </div>
 
       <div className="row g-3">
         <div className="col-12 col-lg-6">
           <ProximasReservas reservas={proximasReservas(datos.reservasHoy)} />
         </div>
-        <div className="col-12 col-lg-6">
-          <StockBajo materiales={datos.stockBajo} />
-        </div>
-        <div className="col-12">
-          <ConsumosPendientes consumos={datos.consumosPendientes} alCambiar={() => setRecargas((n) => n + 1)} />
-        </div>
+        {esAdmin && (
+          <>
+            <div className="col-12 col-lg-6">
+              <StockBajo materiales={datos.stockBajo} />
+            </div>
+            <div className="col-12">
+              <ConsumosPendientes consumos={datos.consumosPendientes} alCambiar={() => setRecargas((n) => n + 1)} />
+            </div>
+          </>
+        )}
       </div>
     </>
   );
