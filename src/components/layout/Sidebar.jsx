@@ -3,7 +3,7 @@
 import NavLink from "@/components/layout/NavLink";
 import BotonCerrarSesion from "@/components/layout/BotonCerrarSesion";
 import { useSesion } from "@/context/SesionContext";
-import { menuDelRol } from "@/lib/permisos";
+import { menuDelRol, tituloPanel } from "@/lib/permisos";
 
 // Menú vertical del panel. En celular se transforma en offcanvas.
 // Solo muestra las secciones que el rol del usuario puede ver.
@@ -14,7 +14,7 @@ export default function Sidebar() {
     <div className="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary">
       <div className="offcanvas-md offcanvas-start bg-body-tertiary" tabIndex="-1" id="menuLateral" aria-labelledby="menuLateralTitulo">
         <div className="offcanvas-header">
-          <h5 className="offcanvas-title" id="menuLateralTitulo">EasyHair Admin</h5>
+          <h5 className="offcanvas-title" id="menuLateralTitulo">{tituloPanel(usuario?.rol)}</h5>
           <button type="button" className="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#menuLateral" aria-label="Cerrar"></button>
         </div>
 

@@ -1,4 +1,4 @@
-import { menuDelRol, puedeHacer, puedeVerRuta } from "@/lib/permisos";
+import { menuDelRol, puedeHacer, puedeVerRuta, tituloPanel } from "@/lib/permisos";
 
 const { module, test } = QUnit;
 
@@ -54,5 +54,10 @@ module("permisos", () => {
   test("el staff sí puede hacer las acciones de la peluquería", (assert) => {
     assert.ok(puedeHacer("STAFF", "atenderReserva"));
     assert.ok(puedeHacer("STAFF", "crearBloqueo"));
+  });
+
+  test("el título del panel cambia según el rol", (assert) => {
+    assert.equal(tituloPanel("ADMIN"), "EasyHair Admin");
+    assert.equal(tituloPanel("STAFF"), "EasyHair Staff");
   });
 });

@@ -30,6 +30,11 @@ export function menuDelRol(rol) {
   return opcionesMenu.filter((opcion) => puedeVerRuta(rol, opcion.href));
 }
 
+// Nombre del panel que se muestra arriba según quién entró
+export function tituloPanel(rol) {
+  return rol === "STAFF" ? "EasyHair Staff" : "EasyHair Admin";
+}
+
 // Dice si el rol puede hacer una acción (crear, editar, etc.)
 export function puedeHacer(rol, accion) {
   if (rol === "ADMIN") {
