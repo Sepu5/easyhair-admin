@@ -1,8 +1,11 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { leerSesion, guardarSesion, borrarSesion } from "@/lib/sesion";
-import { EVENTO_SESION_EXPIRADA } from "@/lib/api";
+import { leerSesion, guardarSesion, borrarSesion, debeRenovar, renovarSesion, puedeEntrarAlPanel } from "@/lib/sesion";
+import { EVENTO_SESION_EXPIRADA, pedir } from "@/lib/api";
+
+// Cada cuánto se revisa si el token está por vencer (5 minutos)
+const CADA_CUANTO_REVISAR = 5 * 60 * 1000;
 
 // Context: comparte el usuario que inició sesión con todo el panel
 const SesionContext = createContext(null);
@@ -31,6 +34,36 @@ export function SesionProvider({ children }) {
     return () => window.removeEventListener(EVENTO_SESION_EXPIRADA, alExpirar);
   }, []);
 
+  // Mientras haya sesión, cada 5 minutos se revisa si el token está por vencer.
+  // Si le queda menos de 1 hora se pide uno nuevo, así la sesión no se corta
+  // mientras alguien está usando el panel.
+  const haySesion = usuario !== null;
+  useEffect(() => {
+    if (!haySesion) return;
+
+    async function revisar() {
+      const sesion = leerSesion();
+      if (!sesion || !debeRenovar(sesion.token)) return;
+      try {
+        const nueva = await renovarSesion(pedir);
+        if (puedeEntrarAlPanel(nueva.usuario.rol)) {
+          guardarSesion(nueva.token, nueva.usuario);
+          setUsuario(nueva.usuario);
+        } else {
+          // si le quitaron el acceso al panel, se cierra la sesión
+          borrarSesion();
+          setUsuario(null);
+        }
+      } catch {
+        // si falla (por ejemplo sin internet) se intenta de nuevo en la próxima revisión
+      }
+    }
+
+    revisar();
+    const intervalo = setInterval(revisar, CADA_CUANTO_REVISAR);
+    return () => clearInterval(intervalo);
+  }, [haySesion]);
+
   function iniciarSesion(token, datosUsuario) {
     guardarSesion(token, datosUsuario);
     setUsuario(datosUsuario);
@@ -44,7 +77,7 @@ export function SesionProvider({ children }) {
   const valor = {
     usuario,
     cargando,
-    haySesion: usuario !== null,
+    haySesion,
     iniciarSesion,
     cerrarSesion,
   };

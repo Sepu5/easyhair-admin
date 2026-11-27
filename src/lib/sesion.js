@@ -73,3 +73,26 @@ export function leerSesion(ahora = Date.now()) {
     return null;
   }
 }
+
+
+// ---- Renovación del token ----
+
+// Si al token le queda menos de 1 hora, se pide uno nuevo
+export const MARGEN_RENOVACION = 60 * 60 * 1000;
+
+// Dice si conviene renovar: el token sigue vigente pero está por vencer
+export function debeRenovar(token, ahora = Date.now(), margen = MARGEN_RENOVACION) {
+  const datos = leerDatosToken(token);
+  if (!datos || !datos.exp) {
+    return false;
+  }
+  const vence = datos.exp * 1000;
+  return vence > ahora && vence - ahora <= margen;
+}
+
+// Pide un token nuevo al backend con el token actual (dura otras 24 horas).
+// El backend vuelve a leer el usuario, así que si le cambiaron el rol llega actualizado.
+export async function renovarSesion(pedirFn) {
+  const respuesta = await pedirFn("/api/auth/refresh", { method: "POST" });
+  return { token: respuesta.token, usuario: respuesta.usuario };
+}
