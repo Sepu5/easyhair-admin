@@ -1,4 +1,4 @@
-// Lógica del mantenedor de usuarios (sin React, para poder probarla fácil).
+// Lógica del mantenedor de usuarios. La dejamos sin React para poder probarla fácil con QUnit.
 // Todo esto es solo para el ADMIN: el backend responde 403 a cualquier otro rol.
 import { validarCorreo } from "@/lib/validaciones";
 
@@ -21,7 +21,7 @@ export function crearUsuario(pedirFn, usuario) {
   return pedirFn("/api/usuarios", { method: "POST", body: usuario });
 }
 
-// Edita nombre, correo y (si viene) contraseña. El rol se cambia aparte.
+// Edita nombre, correo y (si viene) la contraseña. El rol lo cambiamos aparte.
 export function editarUsuario(pedirFn, id, datos) {
   return pedirFn(`/api/usuarios/${id}`, { method: "PUT", body: datos });
 }
@@ -36,7 +36,7 @@ export function eliminarUsuario(pedirFn, id) {
 
 // ---- Filtros y conteos ----
 
-// Filtra por nombre o correo (sin importar mayúsculas) y por rol ("" = todos)
+// Filtramos por nombre o correo (sin importar mayúsculas) y por rol ("" = todos)
 export function filtrarUsuarios(usuarios, { texto = "", rol = "" } = {}) {
   const buscado = texto.trim().toLowerCase();
   return usuarios.filter((usuario) => {
@@ -63,9 +63,9 @@ export function esCuentaPropia(usuario, idSesion) {
   return usuario.id === idSesion;
 }
 
-// ---- Validaciones del formulario (las mismas reglas que el backend) ----
+// ---- Validaciones del formulario (usamos las mismas reglas que el backend) ----
 
-// Al editar, la contraseña es opcional (vacía = no se cambia) y el rol no se pide
+// Al editar, la contraseña es opcional (vacía = no se cambia) y el rol no lo pedimos
 export function validarUsuario({ nombre, correo, password, rol }, editando = false) {
   const errores = {};
 
@@ -92,8 +92,8 @@ export function validarUsuario({ nombre, correo, password, rol }, editando = fal
   return errores;
 }
 
-// Deja los datos como los espera el backend.
-// Al editar no se manda el rol, y la contraseña solo si se escribió una nueva.
+// Dejamos los datos como los espera el backend.
+// Al editar no mandamos el rol, y la contraseña solo si escribieron una nueva.
 export function armarUsuario({ nombre, correo, password, rol }, editando = false) {
   const datos = {
     nombre: nombre.trim(),

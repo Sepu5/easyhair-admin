@@ -9,13 +9,13 @@ export const metadata = {
   description: "Panel de administración de la peluquería EasyHair",
 };
 
-// Molde de todas las páginas (también del login).
-// El menú lateral está en (panel)/layout.js para que el login no lo tenga.
+// Molde de todas las páginas, incluido el login.
+// El menú lateral lo pusimos en (panel)/layout.js para que el login no lo tenga.
 export default function RootLayout({ children }) {
   return (
     <html lang="es">
       <body>
-        {/* SesionProvider comparte el usuario logueado con todas las páginas */}
+        {/* con SesionProvider compartimos el usuario logueado con todas las páginas */}
         <SesionProvider>{children}</SesionProvider>
         <BootstrapClient />
       </body>

@@ -1,9 +1,9 @@
-// Lógica del dashboard (sin React, para poder probarla fácil)
+// Lógica del dashboard. La dejamos sin React para poder probarla fácil con QUnit
 import { cargarAgenda, cargarPeluqueros, contarPorEstado } from "@/lib/reservas";
 
-// Pide todo lo que muestra el dashboard al mismo tiempo (en paralelo con Promise.all),
-// así la página carga en lo que tarda la petición más lenta y no en la suma de todas.
-// El staff solo ve la agenda de hoy: el resumen de plata, el stock y los consumos
+// Pedimos todo lo del dashboard al mismo tiempo (en paralelo con Promise.all),
+// así la página carga en lo que demora la petición más lenta y no en la suma de todas.
+// Al staff solo le pedimos la agenda de hoy: el resumen de plata, el stock y los consumos
 // son del administrador (el backend responde 403 si el staff los pide).
 export async function cargarDashboard(pedirFn, hoy, esAdmin = true) {
   const [anio, mes] = hoy.split("-").map(Number);
@@ -37,12 +37,12 @@ export function armarTarjetas({ resumenMes, reservasHoy, stockBajo, consumosPend
   };
 }
 
-// Las reservas de hoy que todavía falta atender, de la más temprana a la más tarde
+// Las reservas de hoy que todavía faltan por atender, de la más temprana a la más tarde
 export function proximasReservas(reservasHoy) {
   return reservasHoy.filter((reserva) => reserva.estado === "PENDIENTE");
 }
 
-// Cuánto falta comprar para volver al stock mínimo (al menos 1)
+// Cuánto hay que comprar para volver al stock mínimo (como mínimo 1)
 export function cantidadAComprar(material) {
   return Math.max(material.stockMinimo - material.stock, 0) + 1;
 }

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { formatearPrecio } from "@/lib/formato";
 
-// Reservas de hoy que todavía falta atender
+// Las reservas de hoy que todavía faltan por atender
 export default function ProximasReservas({ reservas }) {
   return (
     <div className="card h-100">

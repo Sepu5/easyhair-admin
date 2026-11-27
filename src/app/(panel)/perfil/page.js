@@ -15,14 +15,14 @@ export default function Perfil() {
   const [enviando, setEnviando] = useState(false);
   const [errorGuardar, setErrorGuardar] = useState("");
   const [aviso, setAviso] = useState("");
-  // al sumarle 1 el formulario se arma de nuevo (así se vacían los campos de contraseña)
+  // cada vez que le sumamos 1 el formulario se arma de nuevo (así quedan vacíos los campos de contraseña)
   const [version, setVersion] = useState(0);
 
   const id = usuario?.id;
 
   useEffect(() => {
     if (!id) return;
-    let vigente = true; // evita mostrar una respuesta vieja
+    let vigente = true; // con esto evitamos mostrar una respuesta vieja
 
     async function cargar() {
       setCargando(true);
@@ -50,8 +50,8 @@ export default function Perfil() {
     try {
       const actualizado = await guardarPerfil(pedir, perfil.id, datos);
       setPerfil(actualizado);
-      // La barra de arriba muestra el nombre de la sesión: se guarda otra vez con los datos
-      // nuevos (el token es el mismo, no cambia)
+      // La barra de arriba muestra el nombre guardado en la sesión, así que la guardamos otra vez
+      // con los datos nuevos (el token sigue siendo el mismo)
       iniciarSesion(leerToken(), actualizado);
       setVersion((n) => n + 1);
       setAviso("Perfil actualizado.");

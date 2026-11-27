@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { estaActiva } from "@/lib/menu";
 
-// Opción del menú lateral que se marca cuando estamos en esa página
+// Opción del menú lateral; se marca cuando estamos en esa página
 export default function NavLink({ href, icono, children }) {
   const ruta = usePathname();
   const activo = estaActiva(href, ruta);

@@ -5,8 +5,8 @@ import ModalBase from "@/components/reservas/ModalBase";
 import Campo from "@/components/formularios/Campo";
 import { ETIQUETAS_ROL, ROLES, validarUsuario, armarUsuario } from "@/lib/usuarios";
 
-// Formulario para crear una cuenta nueva con su rol, o editar una existente
-// (si llega "usuario" es editar: el rol se cambia aparte y la contraseña es opcional)
+// Formulario para crear una cuenta nueva con su rol o editar una que ya existe
+// (si nos llega "usuario" estamos editando: el rol se cambia aparte y la contraseña es opcional)
 export default function FormularioUsuario({ usuario, enviando, error, onGuardar, onCerrar }) {
   const editando = Boolean(usuario);
   const [valores, setValores] = useState({

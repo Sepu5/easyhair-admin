@@ -1,7 +1,7 @@
 import { ESTADOS } from "@/lib/reservas";
 
 // Filtros de la agenda: fecha, peluquero y estado.
-// onCambiar(campo, valor) avisa a la página qué filtro cambió.
+// con onCambiar(campo, valor) le avisamos a la página qué filtro cambió.
 export default function FiltrosAgenda({ filtros, peluqueros, onCambiar }) {
   return (
     <div className="row g-2 mb-3">

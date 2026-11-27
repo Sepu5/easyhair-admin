@@ -12,9 +12,9 @@ import {
   validarBloqueo,
 } from "@/lib/reservas";
 
-// Bloqueos de horario de un peluquero en una fecha (ej. tiene un trámite a las 15:00).
+// Bloqueos de horario de un peluquero en una fecha (por ejemplo, si tiene un trámite a las 15:00).
 // Una hora bloqueada ya no aparece para reservar en la app.
-// pedirFn se puede cambiar en las pruebas por uno falso.
+// pedirFn lo recibimos por props para poder pasarle uno falso en las pruebas.
 export default function BloqueosHorario({ fecha, peluquero, hoy, pedirFn = pedir }) {
   const [bloqueos, setBloqueos] = useState([]);
   const [horasLibres, setHorasLibres] = useState([]);
@@ -28,7 +28,7 @@ export default function BloqueosHorario({ fecha, peluquero, hoy, pedirFn = pedir
 
   const esPasada = fecha < hoy;
 
-  // bloqueos y horas libres se piden juntos (en paralelo)
+  // los bloqueos y las horas libres los pedimos juntos (en paralelo)
   useEffect(() => {
     if (!peluquero) return;
     let vigente = true;

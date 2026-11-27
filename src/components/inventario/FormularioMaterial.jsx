@@ -5,7 +5,7 @@ import ModalBase from "@/components/reservas/ModalBase";
 import Campo from "@/components/formularios/Campo";
 import { validarMaterial, armarMaterial } from "@/lib/inventario";
 
-// Formulario para crear o editar un material (si llega "material" es editar)
+// Formulario para crear o editar un material (si nos llega "material" es porque estamos editando)
 export default function FormularioMaterial({ material, enviando, error, onGuardar, onCerrar }) {
   const [valores, setValores] = useState({
     nombre: material?.nombre ?? "",

@@ -1,4 +1,4 @@
-// Título y descripción que va arriba de cada página del panel
+// Título y descripción que ponemos arriba de cada página del panel
 export default function EncabezadoPagina({ titulo, descripcion }) {
   return (
     <div className="mt-4 mb-3">

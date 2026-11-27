@@ -1,6 +1,6 @@
 import { formatearFecha, formatearPrecio } from "@/lib/formato";
 
-// Datos de la reserva que se muestran dentro de los modales
+// Datos de la reserva que mostramos dentro de los modales
 export default function ResumenReserva({ reserva }) {
   return (
     <div className="bg-light rounded p-2 mb-3 small">

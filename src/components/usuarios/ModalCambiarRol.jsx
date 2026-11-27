@@ -4,7 +4,7 @@ import { useState } from "react";
 import ModalBase from "@/components/reservas/ModalBase";
 import { ETIQUETAS_ROL, ROLES } from "@/lib/usuarios";
 
-// Cambia el rol de una cuenta (ej. un cliente que entra a trabajar como staff)
+// Cambia el rol de una cuenta (por ejemplo, un cliente que entra a trabajar como staff)
 export default function ModalCambiarRol({ usuario, enviando, error, onConfirmar, onCerrar }) {
   const [rol, setRol] = useState(usuario.rol);
 

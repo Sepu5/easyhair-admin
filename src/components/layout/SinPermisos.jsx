@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-// Se muestra cuando el usuario entra a una sección que su rol no puede ver
+// Esto lo mostramos cuando alguien entra a una sección que su rol no puede ver
 export default function SinPermisos() {
   return (
     <div className="text-center my-5">

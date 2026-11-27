@@ -13,15 +13,15 @@ import { formatearPrecio, formatearFecha } from "@/lib/formato";
 import { fechaHoy } from "@/lib/reservas";
 import { puedeHacer } from "@/lib/permisos";
 
-// Dashboard: resumen del día de la peluquería.
-// El admin ve todo; el staff solo ve las reservas de hoy.
+// Dashboard: el resumen del día de la peluquería.
+// Al admin le mostramos todo; al staff solo las reservas de hoy, porque lo demás le da 403.
 export default function Dashboard() {
   const { usuario } = useSesion();
   const esAdmin = puedeHacer(usuario?.rol, "verResumenAdmin");
   const hoy = fechaHoy();
   const [datos, setDatos] = useState(null);
   const [error, setError] = useState("");
-  // al sumarle 1 se vuelve a pedir todo (después de aprobar o rechazar un consumo)
+  // cada vez que le sumamos 1 se vuelve a pedir todo (lo usamos después de aprobar o rechazar un consumo)
   const [recargas, setRecargas] = useState(0);
 
   useEffect(() => {

@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSesion } from "@/context/SesionContext";
 
-// Solo muestra el panel si hay una sesión; si no, manda al login
+// Solo mostramos el panel si hay sesión; si no, lo mandamos al login
 export default function PanelProtegido({ children }) {
   const router = useRouter();
   const { haySesion, cargando } = useSesion();
@@ -15,7 +15,7 @@ export default function PanelProtegido({ children }) {
     }
   }, [cargando, haySesion, router]);
 
-  // mientras revisa la sesión (o mientras redirige) no muestra nada del panel
+  // mientras revisamos la sesión (o mientras redirige) no mostramos nada del panel
   if (cargando || !haySesion) {
     return (
       <div className="d-flex justify-content-center align-items-center vh-100">

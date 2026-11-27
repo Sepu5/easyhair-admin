@@ -1,7 +1,7 @@
 import { ETIQUETAS_ROL, ROLES, contarPorRol } from "@/lib/usuarios";
 
 // Buscador por nombre o correo, filtro por rol y cuántos hay de cada rol.
-// onCambiar(campo, valor) avisa a la página qué filtro cambió.
+// con onCambiar(campo, valor) le avisamos a la página qué filtro cambió.
 export default function FiltrosUsuarios({ filtros, usuarios, onCambiar }) {
   const conteo = contarPorRol(usuarios);
 

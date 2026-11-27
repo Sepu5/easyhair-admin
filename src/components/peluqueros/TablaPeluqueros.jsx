@@ -1,7 +1,7 @@
 import FilaPeluquero from "@/components/peluqueros/FilaPeluquero";
 
 // Tabla con los peluqueros de la peluquería.
-// Si puedeEditar es false (staff) no se muestra la columna de acciones.
+// Si puedeEditar es false (staff) no mostramos la columna de acciones.
 export default function TablaPeluqueros({ peluqueros, onEditar, puedeEditar = true }) {
   if (peluqueros.length === 0) {
     return <div className="alert alert-light border">Aún no hay peluqueros registrados.</div>;

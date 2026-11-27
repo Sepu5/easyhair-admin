@@ -1,4 +1,4 @@
-// Lógica de los servicios (sin React, para poder probarla fácil)
+// Lógica de los servicios. La dejamos sin React para poder probarla fácil con QUnit
 
 // Todos los servicios ordenados por nombre
 export async function cargarServicios(pedirFn) {
@@ -14,14 +14,14 @@ export function editarServicio(pedirFn, id, servicio) {
   return pedirFn(`/api/servicios/${id}`, { method: "PUT", body: servicio });
 }
 
-// El backend no lo borra: lo deja inactivo y deja de aparecer en la lista
+// El backend no lo borra de verdad: lo deja inactivo y deja de aparecer en la lista
 export function eliminarServicio(pedirFn, id) {
   return pedirFn(`/api/servicios/${id}`, { method: "DELETE" });
 }
 
 // ---- Validaciones del formulario ----
 
-// Acepta "30" pero no "", "3.5" ni "abc" (el formulario entrega textos)
+// Acepta "30" pero no "", "3.5" ni "abc" (los inputs siempre nos entregan texto)
 function esEntero(valor) {
   const texto = String(valor).trim();
   return texto !== "" && Number.isInteger(Number(texto));
@@ -38,7 +38,7 @@ export function validarServicio({ nombre, duracion, precio }) {
   return errores;
 }
 
-// Convierte lo que escribió el usuario en lo que espera el backend
+// Pasamos lo que escribió el usuario al formato que espera el backend
 export function armarServicio({ nombre, descripcion, duracion, precio }) {
   return {
     nombre: nombre.trim(),

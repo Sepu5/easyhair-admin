@@ -1,6 +1,6 @@
-// Un campo de formulario con estilos de Bootstrap (is-invalid / is-valid + mensaje).
-// Sirve para <input> (por defecto), <select> (type="select" + opciones como children)
-// y <textarea> (type="textarea" + prop rows). Es el mismo de mi-tienda.
+// Un campo de formulario con los estilos de Bootstrap (is-invalid / is-valid y el mensaje).
+// Lo usamos para <input> (por defecto), <select> (type="select" con las opciones como children)
+// y <textarea> (type="textarea" con prop rows). Es el mismo que hicimos en mi-tienda.
 export default function Campo({
   id,
   label,

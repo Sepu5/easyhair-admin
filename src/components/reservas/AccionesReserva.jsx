@@ -1,7 +1,7 @@
 import { accionesDisponibles } from "@/lib/reservas";
 
-// Botones de cada reserva. Solo aparecen los que el backend permite.
-// onAccion(tipo, reserva) le avisa a la página qué se quiere hacer.
+// Botones de cada reserva. Solo mostramos los que el backend permite.
+// con onAccion(tipo, reserva) le avisamos a la página qué se quiere hacer.
 export default function AccionesReserva({ reserva, hoy, onAccion }) {
   const acciones = accionesDisponibles(reserva, hoy);
 

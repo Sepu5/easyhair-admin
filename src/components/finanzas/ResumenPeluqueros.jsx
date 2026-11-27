@@ -1,7 +1,7 @@
 import { nombrePeluquero } from "@/lib/finanzas";
 import { formatearPrecio } from "@/lib/formato";
 
-// Ingresos del mes por peluquero (solo los ingresos por servicios)
+// Ingresos del mes por peluquero (solo cuentan los de servicios)
 export default function ResumenPeluqueros({ resumen, peluqueros }) {
   return (
     <div className="card border-0 shadow-sm h-100">

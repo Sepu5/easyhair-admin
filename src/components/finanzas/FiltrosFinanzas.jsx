@@ -1,5 +1,5 @@
 // Filtros de la página: mes y tipo de movimiento
-// onCambiar(campo, valor) le avisa a la página qué filtro cambió
+// con onCambiar(campo, valor) le avisamos a la página qué filtro cambió
 export default function FiltrosFinanzas({ filtros, onCambiar }) {
   return (
     <div className="row g-3 mb-3">

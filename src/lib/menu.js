@@ -1,5 +1,5 @@
 // Opciones del menú lateral.
-// Se filtran según el rol del usuario en lib/permisos.js
+// Las filtramos según el rol del usuario en lib/permisos.js
 export const opcionesMenu = [
   { href: "/", texto: "Dashboard", icono: "bi-house-fill" },
   { href: "/reservas", texto: "Reservas", icono: "bi-calendar-check" },
@@ -10,7 +10,7 @@ export const opcionesMenu = [
   { href: "/usuarios", texto: "Usuarios", icono: "bi-people" },
 ];
 
-// Dice si una opción del menú es la página actual
+// Dice si una opción del menú es la página en la que estamos
 export function estaActiva(href, ruta) {
   if (href === "/") {
     return ruta === "/";

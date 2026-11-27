@@ -1,6 +1,6 @@
-// Lógica de las reservas (sin React, para poder probarla fácil)
+// Lógica de las reservas. La dejamos sin React para poder probarla fácil con QUnit
 
-// Estados que maneja reservas-service, con su texto y color de Bootstrap
+// Estados que maneja reservas-service, con el texto y el color de Bootstrap que usamos
 export const ESTADOS = {
   PENDIENTE: { texto: "Pendiente", color: "warning" },
   ATENDIDA: { texto: "Atendida", color: "success" },
@@ -8,7 +8,7 @@ export const ESTADOS = {
   NO_ASISTIO: { texto: "No asistió", color: "danger" },
 };
 
-// Fecha de hoy en formato "AAAA-MM-DD" (la hora local, no la de Londres)
+// Fecha de hoy en formato "AAAA-MM-DD" con la hora de Chile (toISOString usa la de Londres y en la noche da el día siguiente)
 export function fechaHoy(ahora = new Date()) {
   const anio = ahora.getFullYear();
   const mes = String(ahora.getMonth() + 1).padStart(2, "0");
@@ -16,7 +16,7 @@ export function fechaHoy(ahora = new Date()) {
   return `${anio}-${mes}-${dia}`;
 }
 
-// Ordena por hora ("10:00" < "11:00") y luego por peluquero, sin cambiar el arreglo original
+// Ordenamos por hora ("10:00" < "11:00") y después por peluquero, sin cambiar el arreglo original
 export function ordenarPorHora(reservas) {
   return [...reservas].sort((a, b) => {
     if (a.hora !== b.hora) return a.hora.localeCompare(b.hora);
@@ -24,7 +24,7 @@ export function ordenarPorHora(reservas) {
   });
 }
 
-// estado vacío = todas
+// si el estado viene vacío devolvemos todas
 export function filtrarPorEstado(reservas, estado) {
   if (!estado) return reservas;
   return reservas.filter((reserva) => reserva.estado === estado);
@@ -49,7 +49,7 @@ export function puedeModificarse(reserva) {
 
 // ---- Llamadas al backend ----
 
-// Peluqueros activos (para el filtro de la agenda)
+// Peluqueros activos (los usamos en el filtro de la agenda)
 export async function cargarPeluqueros(pedirFn) {
   const peluqueros = await pedirFn("/api/peluqueros");
   return peluqueros.filter((peluquero) => peluquero.activo !== false);
@@ -57,7 +57,7 @@ export async function cargarPeluqueros(pedirFn) {
 
 // Agenda de un día.
 // El backend entrega la agenda de UN peluquero, así que para "todos"
-// se piden todas a la vez (en paralelo con Promise.all) y se juntan.
+// pedimos todas a la vez (en paralelo con Promise.all) y las juntamos.
 export async function cargarAgenda(pedirFn, fecha, peluqueros, peluqueroId) {
   const ids = peluqueroId ? [peluqueroId] : peluqueros.map((peluquero) => peluquero.id);
   const respuestas = await Promise.all(
@@ -68,7 +68,7 @@ export async function cargarAgenda(pedirFn, fecha, peluqueros, peluqueroId) {
 
 // ---- Acciones sobre una reserva ----
 
-// Qué botones mostrar según las reglas del backend:
+// Qué botones mostramos según las reglas del backend:
 // todo solo con reservas pendientes, y atender solo el mismo día de la reserva
 export function accionesDisponibles(reserva, hoy = fechaHoy()) {
   const pendiente = puedeModificarse(reserva);
@@ -80,7 +80,7 @@ export function accionesDisponibles(reserva, hoy = fechaHoy()) {
   };
 }
 
-// El staff siempre tiene que explicar por qué cancela
+// Cuando cancela la peluquería siempre tiene que explicar por qué
 export function validarMotivo(motivo) {
   const texto = motivo.trim();
   if (!texto) return "Indica el motivo de la cancelación.";
@@ -112,7 +112,7 @@ export function reprogramarReserva(pedirFn, id, fecha, hora) {
   return pedirFn(`/api/reservas/${id}/reprogramar`, { method: "PUT", body: { fecha, hora } });
 }
 
-// Horas libres de un peluquero en una fecha (ej. ["10:00", "11:00"])
+// Horas libres de un peluquero en una fecha (por ejemplo ["10:00", "11:00"])
 export async function cargarHorasLibres(pedirFn, fecha, peluqueroId) {
   const respuesta = await pedirFn(`/api/reservas/disponibilidad?fecha=${fecha}&peluqueroId=${peluqueroId}`);
   return respuesta.horasDisponibles || [];

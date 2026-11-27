@@ -18,17 +18,17 @@ import {
   eliminarUsuario,
 } from "@/lib/usuarios";
 
-// Mantenedor de usuarios (solo ADMIN; el menú y RutaPermitida no dejan entrar al staff)
+// Mantenedor de usuarios. Es solo para el ADMIN: el menú y RutaPermitida no dejan entrar al staff
 export default function Usuarios() {
   const { usuario } = useSesion();
   const [usuarios, setUsuarios] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
   const [filtros, setFiltros] = useState({ texto: "", rol: "" });
-  // al sumarle 1 se vuelve a pedir la lista (después de crear, cambiar rol o eliminar)
+  // cada vez que le sumamos 1 se vuelve a pedir la lista (después de crear, cambiar rol o eliminar)
   const [recargas, setRecargas] = useState(0);
 
-  // acción abierta en un modal: { tipo: "nuevo" | "editar" | "rol" | "eliminar", usuario } o null
+  // aquí guardamos qué modal está abierto: { tipo: "nuevo" | "editar" | "rol" | "eliminar", usuario } o null
   const [accion, setAccion] = useState(null);
   const [enviando, setEnviando] = useState(false);
   const [errorAccion, setErrorAccion] = useState("");
@@ -59,7 +59,7 @@ export default function Usuarios() {
     if (!enviando) setAccion(null);
   }
 
-  // Ejecuta la acción en el backend; si sale bien cierra el modal y recarga la lista
+  // Mandamos la acción al backend; si sale bien cerramos el modal y recargamos la lista
   async function ejecutar(llamada, mensajeExito) {
     setEnviando(true);
     setErrorAccion("");

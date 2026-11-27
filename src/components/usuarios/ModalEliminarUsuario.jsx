@@ -2,7 +2,7 @@
 
 import ModalBase from "@/components/reservas/ModalBase";
 
-// Confirmación antes de eliminar una cuenta
+// Pedimos confirmación antes de eliminar una cuenta
 export default function ModalEliminarUsuario({ usuario, enviando, error, onConfirmar, onCerrar }) {
   return (
     <ModalBase

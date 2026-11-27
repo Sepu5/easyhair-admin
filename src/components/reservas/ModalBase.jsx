@@ -1,7 +1,7 @@
 "use client";
 
-// Modal controlado por React (sin el JS de Bootstrap), igual que en mi-tienda.
-// Lo usan los modales de las reservas para no repetir el mismo HTML.
+// Modal controlado por React (sin el JS de Bootstrap), igual que lo hicimos en mi-tienda.
+// Lo reutilizamos en todos los modales para no repetir el mismo HTML.
 export default function ModalBase({ titulo, children, pie, onCerrar }) {
   return (
     <>

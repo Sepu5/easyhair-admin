@@ -10,7 +10,7 @@ import { useSesion } from "@/context/SesionContext";
 const INICIAL = { correo: "", contrasena: "" };
 
 // Formulario de inicio de sesión.
-// alEntrar es la función que se llama cuando el login sale bien (la página redirige al panel).
+// alEntrar es la función que llamamos cuando el login sale bien (la página se encarga de redirigir).
 export default function LoginForm({ alEntrar }) {
   const { iniciarSesion } = useSesion();
   const [valores, setValores] = useState(INICIAL);
@@ -19,7 +19,7 @@ export default function LoginForm({ alEntrar }) {
   const [errorServidor, setErrorServidor] = useState("");
   const [enviando, setEnviando] = useState(false);
 
-  // Los errores se calculan a partir de los valores en cada render
+  // Los errores los calculamos con los valores en cada render, así no hay que guardarlos aparte
   const errores = validarLogin(valores);
 
   function handleChange(e) {
@@ -36,7 +36,7 @@ export default function LoginForm({ alEntrar }) {
   async function handleSubmit(e) {
     e.preventDefault();
     setIntentoEnvio(true);
-    if (Object.keys(errores).length > 0) return; // no deja enviar datos inválidos
+    if (Object.keys(errores).length > 0) return; // si hay errores no mandamos nada
 
     setEnviando(true);
     try {
@@ -45,7 +45,7 @@ export default function LoginForm({ alEntrar }) {
         body: { correo: valores.correo.trim(), password: valores.contrasena },
       });
 
-      // el panel es solo para la administración, no para clientes
+      // el panel es solo para la peluquería; los clientes usan la app
       if (!puedeEntrarAlPanel(respuesta.usuario.rol)) {
         setErrorServidor("Esta cuenta es de cliente. Usa la app de EasyHair para reservar.");
         return;

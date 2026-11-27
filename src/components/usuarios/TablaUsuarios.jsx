@@ -2,7 +2,7 @@ import EtiquetaRol from "@/components/usuarios/EtiquetaRol";
 import { esCuentaPropia } from "@/lib/usuarios";
 
 // Tabla con las cuentas registradas.
-// La cuenta del admin que inició sesión se marca con "(tú)": no se puede
+// La cuenta del admin que inició sesión la marcamos con "(tú)": no la dejamos
 // cambiar de rol ni eliminar (el backend tampoco lo permite) y sus datos se editan en Perfil.
 export default function TablaUsuarios({ usuarios, idSesion, onEditar, onCambiarRol, onEliminar }) {
   if (usuarios.length === 0) {

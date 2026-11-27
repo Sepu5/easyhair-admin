@@ -9,24 +9,24 @@ import { pedir } from "@/lib/api";
 import { puedeHacer } from "@/lib/permisos";
 import { listarPeluqueros, crearPeluquero, editarPeluquero } from "@/lib/peluqueros";
 
-// El staff solo puede ver la lista; crear y editar es del admin
+// El staff solo puede ver la lista; crear y editar lo dejamos solo para el admin
 export default function Peluqueros() {
   const { usuario } = useSesion();
   const puedeEditar = puedeHacer(usuario?.rol, "editarPeluqueros");
   const [peluqueros, setPeluqueros] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
-  // al sumarle 1 se vuelve a pedir la lista (después de guardar)
+  // cada vez que le sumamos 1 se vuelve a pedir la lista (lo usamos después de guardar)
   const [recargas, setRecargas] = useState(0);
 
-  // acción abierta en el modal: { tipo: "nuevo" | "editar", peluquero } o null
+  // aquí guardamos qué modal está abierto: { tipo: "nuevo" | "editar", peluquero } o null
   const [accion, setAccion] = useState(null);
   const [enviando, setEnviando] = useState(false);
   const [errorAccion, setErrorAccion] = useState("");
   const [aviso, setAviso] = useState("");
 
   useEffect(() => {
-    let vigente = true; // evita mostrar una respuesta vieja si se cambia rápido
+    let vigente = true; // con esto evitamos mostrar una respuesta vieja si alguien cambia de página muy rápido
 
     async function cargar() {
       setCargando(true);
@@ -57,7 +57,7 @@ export default function Peluqueros() {
     if (!enviando) setAccion(null);
   }
 
-  // Ejecuta la acción en el backend; si sale bien cierra el modal y recarga la lista
+  // Mandamos la acción al backend; si sale bien cerramos el modal y recargamos la lista
   async function ejecutar(llamada, mensajeExito) {
     setEnviando(true);
     setErrorAccion("");
