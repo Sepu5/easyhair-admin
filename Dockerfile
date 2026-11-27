@@ -11,6 +11,9 @@ RUN npm ci
 
 COPY . .
 
+# la carpeta public puede venir vacía (git no guarda carpetas vacías)
+RUN mkdir -p public
+
 # La URL del backend queda dentro del código al compilar (por eso es ARG y no ENV)
 ARG NEXT_PUBLIC_API_URL=http://54.152.113.142
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
