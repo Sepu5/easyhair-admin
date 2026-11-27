@@ -77,3 +77,27 @@ module("dashboard", () => {
     assert.equal(nombreMes("2026-01-05"), "enero");
   });
 });
+
+module("dashboard del staff", () => {
+  test("el staff solo pide la agenda de hoy", async (assert) => {
+    const { pedirFalso, rutas } = crearPedirFalso();
+
+    const datos = await cargarDashboard(pedirFalso, HOY, false);
+
+    assert.notOk(rutas.includes("/api/movimientos/resumen?anio=2026&mes=11"));
+    assert.notOk(rutas.includes("/api/materiales/stock-bajo"));
+    assert.notOk(rutas.includes("/api/consumos?estado=PENDIENTE"));
+    assert.deepEqual(datos.reservasHoy.map((r) => r.id), [1, 2]);
+  });
+
+  test("las tarjetas del staff no fallan sin datos de admin", async (assert) => {
+    const { pedirFalso } = crearPedirFalso();
+    const datos = await cargarDashboard(pedirFalso, HOY, false);
+
+    const tarjetas = armarTarjetas(datos);
+
+    assert.equal(tarjetas.reservasHoy, 2);
+    assert.equal(tarjetas.ingresosMes, 0);
+    assert.equal(tarjetas.consumosPendientes, 0);
+  });
+});

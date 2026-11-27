@@ -3,12 +3,20 @@ import { cargarAgenda, cargarPeluqueros, contarPorEstado } from "@/lib/reservas"
 
 // Pide todo lo que muestra el dashboard al mismo tiempo (en paralelo con Promise.all),
 // así la página carga en lo que tarda la petición más lenta y no en la suma de todas.
-export async function cargarDashboard(pedirFn, hoy) {
+// El staff solo ve la agenda de hoy: el resumen de plata, el stock y los consumos
+// son del administrador (el backend responde 403 si el staff los pide).
+export async function cargarDashboard(pedirFn, hoy, esAdmin = true) {
   const [anio, mes] = hoy.split("-").map(Number);
+
+  const agendaDeHoy = cargarPeluqueros(pedirFn).then((peluqueros) => cargarAgenda(pedirFn, hoy, peluqueros, ""));
+
+  if (!esAdmin) {
+    return { resumenMes: null, reservasHoy: await agendaDeHoy, stockBajo: [], consumosPendientes: [] };
+  }
 
   const [resumenMes, reservasHoy, stockBajo, consumosPendientes] = await Promise.all([
     pedirFn(`/api/movimientos/resumen?anio=${anio}&mes=${mes}`),
-    cargarPeluqueros(pedirFn).then((peluqueros) => cargarAgenda(pedirFn, hoy, peluqueros, "")),
+    agendaDeHoy,
     pedirFn("/api/materiales/stock-bajo"),
     pedirFn("/api/consumos?estado=PENDIENTE"),
   ]);
