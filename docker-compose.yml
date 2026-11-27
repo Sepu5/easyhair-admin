@@ -1,0 +1,38 @@
+# Levanta la web de administración y Caddy (HTTPS) en el EC2.
+# En el servidor: docker compose up -d --build
+#
+# https://54-152-113-142.sslip.io        -> web (con HTTPS)
+# https://54-152-113-142.sslip.io/api/.. -> gateway del backend
+# http://54.152.113.142:3000             -> web directo (sin HTTPS, para probar)
+services:
+  web:
+    build:
+      context: .
+      args:
+        # la web llama a la API por el mismo dominio con HTTPS
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://54-152-113-142.sslip.io}
+    container_name: easyhair-admin
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: easyhair-caddy
+    ports:
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      # aquí se guardan los certificados para no pedirlos de nuevo en cada reinicio
+      - caddy_data:/data
+      - caddy_config:/config
+    extra_hosts:
+      # deja que Caddy llegue al gateway que corre en el mismo servidor
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - web
+    restart: unless-stopped
+
+volumes:
+  caddy_data:
+  caddy_config:
