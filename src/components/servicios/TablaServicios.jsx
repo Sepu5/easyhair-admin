@@ -1,7 +1,8 @@
 import FilaServicio from "@/components/servicios/FilaServicio";
 
-// Tabla con los servicios de la peluquería
-export default function TablaServicios({ servicios, onEditar, onEliminar }) {
+// Tabla con los servicios de la peluquería.
+// Si puedeEditar es false (staff) no se muestra la columna de acciones.
+export default function TablaServicios({ servicios, onEditar, onEliminar, puedeEditar = true }) {
   if (servicios.length === 0) {
     return <div className="alert alert-light border">Aún no hay servicios registrados.</div>;
   }
@@ -16,12 +17,12 @@ export default function TablaServicios({ servicios, onEditar, onEliminar }) {
             <th>Duración</th>
             <th>Precio</th>
             <th>Estado</th>
-            <th>Acciones</th>
+            {puedeEditar && <th>Acciones</th>}
           </tr>
         </thead>
         <tbody>
           {servicios.map((servicio) => (
-            <FilaServicio key={servicio.id} servicio={servicio} onEditar={onEditar} onEliminar={onEliminar} />
+            <FilaServicio key={servicio.id} servicio={servicio} onEditar={onEditar} onEliminar={onEliminar} puedeEditar={puedeEditar} />
           ))}
         </tbody>
       </table>

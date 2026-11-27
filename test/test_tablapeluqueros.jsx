@@ -87,3 +87,16 @@ module("FormularioPeluquero", (hooks) => {
     assert.ok(screen.getByText("Ya existe un peluquero con ese correo"));
   });
 });
+
+
+module("TablaPeluqueros para el staff", (hooks) => {
+  hooks.afterEach(() => cleanup());
+
+  test("sin permiso de edición no muestra la columna ni el botón editar", (assert) => {
+    render(<TablaPeluqueros peluqueros={peluqueros} onEditar={() => {}} puedeEditar={false} />);
+
+    assert.equal(screen.queryByText("Acciones"), null);
+    assert.equal(screen.queryByRole("button", { name: /Editar/ }), null);
+    assert.ok(screen.getByText("Valeria Soto")); // la lista se sigue viendo
+  });
+});

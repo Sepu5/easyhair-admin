@@ -1,5 +1,5 @@
 // Una fila de la tabla de peluqueros
-export default function FilaPeluquero({ peluquero, onEditar }) {
+export default function FilaPeluquero({ peluquero, onEditar, puedeEditar = true }) {
   return (
     <tr>
       <td className="fw-semibold">{peluquero.nombre}</td>
@@ -9,11 +9,13 @@ export default function FilaPeluquero({ peluquero, onEditar }) {
           {peluquero.activo ? "Activo" : "Inactivo"}
         </span>
       </td>
-      <td>
-        <button type="button" className="btn btn-sm btn-outline-primary" onClick={() => onEditar(peluquero)}>
-          <i className="bi bi-pencil"></i> Editar
-        </button>
-      </td>
+      {puedeEditar && (
+        <td>
+          <button type="button" className="btn btn-sm btn-outline-primary" onClick={() => onEditar(peluquero)}>
+            <i className="bi bi-pencil"></i> Editar
+          </button>
+        </td>
+      )}
     </tr>
   );
 }

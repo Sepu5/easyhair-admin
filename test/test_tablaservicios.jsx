@@ -106,3 +106,17 @@ module("ModalEliminarServicio", (hooks) => {
     assert.ok(confirmado);
   });
 });
+
+
+module("TablaServicios para el staff", (hooks) => {
+  hooks.afterEach(() => cleanup());
+
+  test("sin permiso de edición no muestra la columna ni los botones", (assert) => {
+    render(<TablaServicios servicios={servicios} onEditar={() => {}} onEliminar={() => {}} puedeEditar={false} />);
+
+    assert.equal(screen.queryByText("Acciones"), null);
+    assert.equal(screen.queryByRole("button", { name: /Editar/ }), null);
+    assert.equal(screen.queryByRole("button", { name: /Eliminar/ }), null);
+    assert.ok(screen.getByText("Corte")); // la lista se sigue viendo
+  });
+});
