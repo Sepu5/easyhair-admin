@@ -1,0 +1,20 @@
+# Caddy pone HTTPS delante de la web y de la API, con un certificado gratis
+# de Let's Encrypt. sslip.io convierte la IP en un nombre de dominio:
+# 54-152-113-142.sslip.io apunta a 54.152.113.142.
+{
+	# El puerto 80 del servidor ya lo usa el gateway (la app móvil),
+	# así que Caddy no redirige http -> https y pide el certificado por el 443.
+	auto_https disable_redirects
+}
+
+{$DOMINIO:54-152-113-142.sslip.io} {
+	# /api/... va al gateway de easyhair-backend (puerto 80 del mismo EC2)
+	handle /api/* {
+		reverse_proxy host.docker.internal:80
+	}
+
+	# todo lo demás es la web de administración
+	handle {
+		reverse_proxy web:3000
+	}
+}

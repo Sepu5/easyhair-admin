@@ -15,7 +15,7 @@ COPY . .
 RUN mkdir -p public
 
 # La URL del backend queda dentro del código al compilar (por eso es ARG y no ENV)
-ARG NEXT_PUBLIC_API_URL=http://54.152.113.142
+ARG NEXT_PUBLIC_API_URL=https://54-152-113-142.sslip.io
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
