@@ -1,10 +1,11 @@
 import PanelProtegido from "@/components/layout/PanelProtegido";
+import RutaPermitida from "@/components/layout/RutaPermitida";
 import Sidebar from "@/components/layout/Sidebar";
 import Topbar from "@/components/layout/Topbar";
 
 // Molde de las páginas del panel: barra de arriba, menú a la izquierda y contenido al centro.
 // La carpeta (panel) va entre paréntesis para que no aparezca en la URL.
-// PanelProtegido no deja ver nada si no hay sesión.
+// PanelProtegido no deja ver nada si no hay sesión y RutaPermitida revisa el rol.
 export default function PanelLayout({ children }) {
   return (
     <PanelProtegido>
@@ -12,7 +13,9 @@ export default function PanelLayout({ children }) {
       <div className="container-fluid">
         <div className="row">
           <Sidebar />
-          <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4 mb-3">{children}</main>
+          <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4 mb-3">
+            <RutaPermitida>{children}</RutaPermitida>
+          </main>
         </div>
       </div>
     </PanelProtegido>
